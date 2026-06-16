@@ -15,8 +15,8 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
     const baseStyle = "px-4 py-2 rounded font-medium transition-all active:scale-95";
     const varianStyle = {
-        primary: "bg-[#35A2FD] text-white hover:bg-blue-800",
-        secondary: "bg-[#F2BB44] text-white hover:bg-yellow-600",
+        primary: "bg-[#35A2FD] text-white hover:bg-[#1D8DF5]",
+        secondary: "bg-[#F2BB44] text-white hover:bg-[#DFA12B]",
     };
 
     return (

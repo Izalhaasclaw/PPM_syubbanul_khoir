@@ -1,19 +1,21 @@
-<<<<<<< HEAD
-import { Button } from "./components/button";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Beranda from "./pages/Beranda";
+import MainLayouts from "./layouts/mainLayouts";
+import Artikel from "./pages/Artikel";
+import DetailArtikel from "./pages/DetailArtikel";
 
-=======
->>>>>>> 000408fd272d5d33a9fffd7c1ee23df84920ac47
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold text-blue-600">
-        Tailwind v4 Berhasil 🎉
-<<<<<<< HEAD
-        <Button label="Click Me" variant="secondary" />
-=======
->>>>>>> 000408fd272d5d33a9fffd7c1ee23df84920ac47
-      </h1>
-    </div>
+    <BrowserRouter>
+      <Routes >
+        <Route path="/" element={<MainLayouts />}>
+          <Route index element={<Beranda />} />
+          <Route path="/Artikel" element={<Artikel />} />
+          <Route path="/Artikel/:id" element={<DetailArtikel />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
+
 export default App;
