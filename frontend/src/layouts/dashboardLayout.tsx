@@ -7,9 +7,9 @@ export default function DashboardLayout() {
   const isAuthenticated = authStore((state) => state.isAuthenticated);
 
   // Jika tidak terautentikasi, redirect ke login
-//   if (!isAuthenticated) {
-//     return <Navigate to="/login-form" replace />;
-//   }
+  if (!isAuthenticated) {
+    return <Navigate to="/login-form" replace />;
+  }
 
   // Daftar menu berdasarkan gambar referensi
   const menus = [
