@@ -28,21 +28,21 @@ export const getUser = async (req: Request, res: Response) => {
 // menyimpan data user
 export const saveUser = async (req: Request, res: Response) => {
     try {
-        const { name, jabatan, password, foto} = req.body;
+        const { name, username,password, foto} = req.body;
         
-        if (!name || !password  || !jabatan) {
+        if (!name || !password  || !foto) {
             return res.status(400).json({
-                message: "Nama, jabatan, dan password harus diisi!",
+                message: "Nama, password harus diisi!",
             });
         }
 
         const hashedPassword = await bcrypt.hash(password,10);
         const newUser = await prisma.user.create({
             data: {
-            name,
-            jabatan,
-            password: hashedPassword,
-            foto,
+                name,
+                username,
+                password: hashedPassword,
+                foto,
                
             },
         });
@@ -50,8 +50,8 @@ export const saveUser = async (req: Request, res: Response) => {
             message: "User berhasil dibuat",
             data: {
                 id: newUser.id,
-                jabatan: newUser.jabatan,
                 name: newUser.name,
+                username: newUser.username,
                 foto: newUser.foto,
             }
         });
@@ -100,17 +100,17 @@ export const updateUserById = async (req: Request<{ id: string }>, res: Response
                 message: "User tidak ditemukan",
             });
         }
-        const { name, password, jabatan, foto } = req.body;
+        const { name, username, password, foto } = req.body;
         const hashedPassword = password? await bcrypt.hash(password,10) : undefined
         const updatedUser = await prisma.user.update({
-            where: { id },
+        where: { id },
             data: {
-                name: name ?? existingUser.name,
-                jabatan: jabatan ?? existingUser.jabatan,
-                password: hashedPassword ?? existingUser.password,
-                foto: foto?? existingUser.foto,
-               
-            },
+            name: name ?? existingUser.name,
+            username: username ?? existingUser.username,
+            password: hashedPassword ?? existingUser.password,
+            foto: foto ?? existingUser.foto,
+            updatedAt: new Date(),
+    },
         });
         res.json({
             message: "User berhasil diupdate",

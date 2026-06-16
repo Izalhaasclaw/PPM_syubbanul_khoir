@@ -14,25 +14,24 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
-  jabatan   String 
+  username  String
   password  String
   foto      String?
+
   createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("users")
 }
 
 model Jadwal {
   id          Int      @id @default(autoincrement())
-  name        String
-  no          String
   acara       String
   lokasi      String
   tanggal     DateTime
   waktu       String
-  status      String
 
   createdAt   DateTime @default(now()) @map("created_at")
 
@@ -44,8 +43,22 @@ model Artikel {
   judul      String
   isi        String
   foto       String
-  tanggal    DateTime
+  
   createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("artikels") 
+}
+
+model Informasi {
+  id         Int      @id @default(autoincrement())
+  telpon     String
+  alamat     String
+  instagram  String
+  tiktok     String
+  youtube    String?
+
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("informasi") 
 }

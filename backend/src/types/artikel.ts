@@ -1,7 +1,7 @@
-export interface Artikel {
+export interface Jadwal {
     id: number;
-    judul: string;
-    isi: string;
+    acara: string;
+    lokasi: string;
     tanggal: Date;
-    foto?: string;
+    waktu: string;
 }

@@ -27,9 +27,9 @@ tanggal: "asc",
 // Menyimpan jadwal
 export const saveJadwal = async (req: Request, res: Response) => {
 try {
-const { name, no, acara, lokasi, tanggal, waktu, status } = req.body;
+    const { acara, lokasi, tanggal, waktu, } = req.body;
 
-    if (!name || !acara || !lokasi || !tanggal || !waktu || !status) {
+    if (!acara || !lokasi || !tanggal || !waktu) {
         res.status(400).json({
             message: "Data jadwal belum lengkap",
         });
@@ -38,13 +38,10 @@ const { name, no, acara, lokasi, tanggal, waktu, status } = req.body;
 
     const newJadwal = await prisma.jadwal.create({
         data: {
-            name,
-            no,
             acara,
             lokasi,
             tanggal: new Date(tanggal),
             waktu,
-            status,
         },
     });
 
@@ -64,11 +61,11 @@ const { name, no, acara, lokasi, tanggal, waktu, status } = req.body;
 
 // Menampilkan jadwal berdasarkan ID
 export const showJadwalById = async (
-req: Request<{ id: string }>,
-res: Response
-) => {
+    req: Request<{ id: string }>,
+    res: Response
+        ) => {
 try {
-const id = Number(req.params.id);
+    const id = Number(req.params.id);
 
     const jadwal = await prisma.jadwal.findUnique({
         where: { id },
@@ -112,12 +109,13 @@ const id = Number(req.params.id);
         return;
     }
 
-    const { name, no, acara, lokasi, tanggal, waktu, status } = req.body;
+    const { acara, lokasi, tanggal, waktu, status } = req.body;
 
     const updatedJadwal = await prisma.jadwal.update({
         where: { id },
         data: {
-            status: status ?? existingJadwal.status,
+            tanggal: tanggal ?? existingJadwal.tanggal,
+            waktu: waktu ?? existingJadwal.waktu,
         },
     });
 

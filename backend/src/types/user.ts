@@ -1,7 +1,7 @@
 export interface User{
     id: number;
     name: string;
-    jabatan: string;
+    username: string;
     password: string;
     foto?: string;
     
