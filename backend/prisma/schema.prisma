@@ -5,11 +5,47 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  name      String
+  jabatan   String 
+  password  String
+  foto      String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model Jadwal {
+  id          Int      @id @default(autoincrement())
+  name        String
+  no          String
+  acara       String
+  lokasi      String
+  tanggal     DateTime
+  waktu       String
+  status      String
+
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("jadwal") 
+}
+
+model Artikel {
+  id         Int      @id @default(autoincrement())
+  judul      String
+  isi        String
+  foto       String
+  tanggal    DateTime
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("artikels") 
 }
