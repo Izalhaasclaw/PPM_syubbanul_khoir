@@ -1,13 +1,14 @@
 import express from "express";
+import { authenticate } from "../middlewares/authMiddleware.js";
 import { deleteJadwalById, getJadwal, saveJadwal, showJadwalById, updateJadwalById } from "../controlllers/jadwalController.js";
 
 const router = express.Router();
 
     router.get("/", getJadwal);
-    router.post("/", saveJadwal);
+    router.post("/", authenticate, saveJadwal);
     router.get("/:id", showJadwalById);
-    router.put("/:id", updateJadwalById);
-    router.delete("/:id", deleteJadwalById);
+    router.put("/:id", authenticate, updateJadwalById);
+    router.delete("/:id", authenticate, deleteJadwalById);
 
 
 export default router;
