@@ -1,16 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mysql"
-  url     = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -19,7 +13,6 @@ model User {
   username  String
   password  String
   foto      String?
-
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -27,38 +20,35 @@ model User {
 }
 
 model Jadwal {
-  id          Int      @id @default(autoincrement())
-  acara       String
-  lokasi      String
-  tanggal     DateTime
-  waktu       String
+  id        Int      @id @default(autoincrement())
+  acara     String
+  lokasi    String
+  tanggal   DateTime
+  waktu     String
+  createdAt DateTime @default(now()) @map("created_at")
 
-  createdAt   DateTime @default(now()) @map("created_at")
-
-  @@map("jadwal") 
+  @@map("jadwal")
 }
 
 model Artikel {
-  id         Int      @id @default(autoincrement())
-  judul      String
-  isi        String
-  foto       String
-  
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+  id        Int      @id @default(autoincrement())
+  judul     String
+  isi       String
+  foto      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@map("artikels") 
+  @@map("artikels")
 }
 
 model Informasi {
-  id         Int      @id @default(autoincrement())
-  telpon     String
-  alamat     String
-  instagram  String
-  tiktok     String
-  youtube    String?
+  id        Int      @id @default(autoincrement())
+  telpon    String
+  alamat    String
+  instagram String
+  tiktok    String
+  youtube   String?
+  createdAt DateTime @default(now()) @map("created_at")
 
-  createdAt  DateTime @default(now()) @map("created_at")
-
-  @@map("informasi") 
+  @@map("informasi")
 }

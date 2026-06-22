@@ -2,157 +2,150 @@ import { Request, Response } from "express";
 import { prisma } from "../lib/db.js";
 import bcrypt from "bcrypt";
 
-// 1. MENAMPILKAN ALL USERS
+// menampilkan User
 export const getUser = async (req: Request, res: Response) => {
     try {
         const allUser = await prisma.user.findMany({
             orderBy: {
-                createdAt: "desc", // Menampilkan yang terbaru di atas
+                createdAt: "desc",
             },
         });
 
-        // PERBAIKAN: Mengubah key 'user' menjadi 'data' agar sinkron dengan Frontend React
-        return res.status(200).json({ 
-            message: "Data berhasil ditampilkan", 
-            data: allUser 
-        });
+        //tampilkan data
+        res.status(200).json({ message: "Data berhasil ditampilkan", user: (allUser) });
 
     } catch (error) {
-        return res.status(500).json({
-            message: "Gagal mengambil data user",
+
+        // jika error
+        res.status(500).json({
+            message: "Error",
             error,
         });
+
     }
 };
 
-// 2. MENYIMPAN DATA USER (REGISTER)
+// menyimpan data user
 export const saveUser = async (req: Request, res: Response) => {
     try {
-        const { name, username, password, foto } = req.body;
+        const { name, username,password, foto} = req.body;
         
-        // PERBAIKAN: username wajib diisi, sedangkan foto bersifat opsional (?)
-        if (!name || !username || !password) {
+        if (!name || !password  || !foto) {
             return res.status(400).json({
-                message: "Nama, username, dan password harus diisi!",
+                message: "Nama, password harus diisi!",
             });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        
+        const hashedPassword = await bcrypt.hash(password,10);
         const newUser = await prisma.user.create({
             data: {
                 name,
                 username,
                 password: hashedPassword,
-                foto: foto || null, // Jika foto kosong, isi dengan null
+                foto,
+               
             },
         });
-
-        return res.status(201).json({
+        res.status(201).json({
             message: "User berhasil dibuat",
-            data: newUser
+            data: {
+                id: newUser.id,
+                name: newUser.name,
+                username: newUser.username,
+                foto: newUser.foto,
+            }
         });
 
     } catch (error) {
-        return res.status(500).json({
+        res.status(500).json({
             message: "Gagal membuat user",
             error,
         });
     }
+
+
 };   
 
-// 3. MENAMPILKAN DATA USER BY ID
+// menampilkan data User berdasrkan id
 export const showUserById = async (req: Request<{ id: string }>, res: Response) => {
     try {
         const id = Number(req.params.id);
         const user = await prisma.user.findUnique({
             where: { id },
         });
-
         if (!user) {
             return res.status(404).json({
                 message: "User tidak ditemukan",
             });
         }
-
-        return res.json({
-            message: "Detail user ditemukan",
-            data: user
-        });
+        res.json(user);
     } catch (error) {
-        return res.status(500).json({
+        res.status(500).json({
             message: "Gagal mengambil detail user",
             error,
         });
     }
+
 };
 
-// 4. UPDATE USER BY ID
+// mengupdate user berdasrkan id
 export const updateUserById = async (req: Request<{ id: string }>, res: Response) => {
    try {
         const id = Number(req.params.id);
-        
         const existingUser = await prisma.user.findUnique({
             where: { id },
         });
-
         if (!existingUser) {
             return res.status(404).json({
                 message: "User tidak ditemukan",
             });
         }
-
         const { name, username, password, foto } = req.body;
-        
-        // Jika password baru diisi, lakukan hashing. Jika tidak, biarkan undefined (Prisma akan mengabaikannya)
-        const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
-
+        const hashedPassword = password? await bcrypt.hash(password,10) : undefined
         const updatedUser = await prisma.user.update({
-            where: { id },
+        where: { id },
             data: {
-                name: name ?? undefined,
-                username: username ?? undefined,
-                password: hashedPassword ?? undefined, // Tidak akan menimpa password lama jika kosong
-                foto: foto !== undefined? foto:existingUser.foto
-            },
+            name: name ?? existingUser.name,
+            username: username ?? existingUser.username,
+            password: hashedPassword ?? existingUser.password,
+            foto: foto ?? existingUser.foto,
+            updatedAt: new Date(),
+    },
         });
-
-        return res.json({
+        res.json({
             message: "User berhasil diupdate",
             data: updatedUser,
         });
     } catch (error) {
-        return res.status(500).json({
+        res.status(500).json({
             message: "Gagal update user",
             error,
         });
     }
+
+
 };
 
-// 5. MENGHAPUS USER BY ID
+// menghapus user berdasarkan id
 export const deleteUserById = async (req: Request<{ id: string }>, res: Response) => {
     try {
         const id = Number(req.params.id);
-
         const existingUser = await prisma.user.findUnique({
             where: { id },
         });
-
         if (!existingUser) {
             return res.status(404).json({
                 message: "User tidak ditemukan",
             });
         }
-
         await prisma.user.delete({
             where: { id },
         });
-
-        return res.json({
-            message: `User dengan ID #${id} berhasil dihapus`,
+        res.json({
+            message: `User id:${id} berhasil dihapus`,
         });
     } catch (error) {
-        return res.status(500).json({
+        res.status(500).json({
             message: "Gagal menghapus user",
             error,
         });
