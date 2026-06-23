@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  Edit,
-  Loader2
-} from "lucide-react";
+import { Edit, Loader2 } from "lucide-react";
+import { API } from "../../../lib/axios"; // 👈 1. Hubungkan ke instance Axios kamu
 
 interface Info {
   id: number;
@@ -14,19 +12,18 @@ interface Info {
   youtube: string;
 }
 
-const API_URL = "http://localhost:3000/informasi";
-
 export default function InfoIndex() {
   const [infoData, setInfoData] = useState<Info[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 👈 2. Menggunakan API.get("/informasi") mendepak fetch bawaan
   const fetchInfo = async () => {
     try {
       setLoading(true);
-      const res = await fetch(API_URL);
-      if (!res.ok) throw new Error("Gagal mengambil data Info");
-
-      const responseData = await res.json();
+      const res = await API.get("/informasi");
+      
+      // Axios otomatis mem-parse response ke res.data
+      const responseData = res.data;
       const result = responseData.data || responseData.Info || responseData;
 
       if (Array.isArray(result)) {
@@ -37,9 +34,10 @@ export default function InfoIndex() {
       } else {
         setInfoData([]);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert("Gagal memuat data Info.");
+      const errorMessage = error.response?.data?.message || "Gagal memuat data Info.";
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -50,7 +48,7 @@ export default function InfoIndex() {
   }, []);
 
   // Ambil ID dari data pertama untuk keperluan routing Halaman Edit (jika data ada)
-  const InfoId = infoData[0]?.id || 1;
+  const infoId = infoData[0]?.id || 1;
 
   return (
     <div className="space-y-6 p-2">
@@ -58,12 +56,12 @@ export default function InfoIndex() {
       <div className="flex justify-between items-start">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold text-gray-900">Data Info</h1>
-          <p className="text-gray-500">Kelola informasi hubungi kami dan media sosial.</p>
+          <p className="text-gray-500">Kelola informasi hubungi kami dan media sosial resmi mading digital.</p>
         </div>
         
-        {/* PERBAIKAN: Tombol Tambah diganti menjadi Tombol Edit */}
-        <Link to={`/Info/edit-Info/${InfoId}`}>
-          <button className="bg-[#3B82F6] hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition-all shadow-sm">
+        {/* Tombol Edit disesuaikan dengan warna brand halaman lainnya */}
+        <Link to={`/info/edit-info/${infoId}`}>
+          <button className="bg-[#35A2FD] hover:bg-[#1D8DF5] text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition-all shadow-sm">
             <Edit size={18} />
             Edit Info
           </button>
@@ -83,31 +81,20 @@ export default function InfoIndex() {
               <thead className="bg-[#0F172A] border-b border-[#0F172A]">
                 <tr>
                   <th className="w-1/4 px-6 py-4 text-sm font-semibold text-white uppercase">
-                    <div className="flex items-center gap-2">
-                      No. Telepon
-                    </div>
+                    No. Telepon
                   </th>
-                  <th className="w-1/6 px-6 py-4 text-sm font-semibold text-white uppercase">
-                    <div className="flex items-center gap-2">
-                      Alamat
-                    </div>
+                  <th className="w-1/3 px-6 py-4 text-sm font-semibold text-white uppercase">
+                    Alamat
                   </th>
                   <th className="w-1/4 px-6 py-4 text-sm font-semibold text-white uppercase">
-                    <div className="flex items-center gap-2">
-                      Instagram
-                    </div>
+                    Instagram
                   </th>
                   <th className="w-1/4 px-6 py-4 text-sm font-semibold text-white uppercase">
-                    <div className="flex items-center gap-2">
-                      TikTok
-                    </div>
+                    TikTok
                   </th>
                   <th className="w-1/4 px-6 py-4 text-sm font-semibold text-white uppercase">
-                    <div className="flex items-center gap-2">
-                      YouTube
-                    </div>
+                    YouTube
                   </th>
-                  {/* Kolom Actions Telah Dihapus */}
                 </tr>
               </thead>
 
@@ -128,7 +115,7 @@ export default function InfoIndex() {
                       {/* Instagram */}
                       <td className="px-6 py-5 text-gray-600 text-sm wrap-break-word">
                         {info.instagram ? (
-                          <span className="text-blue-600 font-medium">@{info.instagram}</span>
+                          <span className="text-[#35A2FD] font-medium">@{info.instagram}</span>
                         ) : (
                           "-"
                         )}
