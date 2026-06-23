@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
-interface KontakForm {
+interface InfoForm {
   no_telepon: string;
   alamat: string;
   instagram: string;
@@ -13,21 +13,21 @@ interface KontakForm {
 
 const API_URL = "http://localhost:3000/informasi";
 
-export default function EditKontak() {
+export default function EditInfo() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<KontakForm>();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<InfoForm>();
 
   // Memuat data lama berdasarkan ID saat halaman dibuka
   useEffect(() => {
-    const fetchCurrentKontak = async () => {
+    const fetchCurrentInfo = async () => {
       try {
         setFetching(true);
         const res = await fetch(`${API_URL}/${id}`);
-        if (!res.ok) throw new Error("Gagal mengambil data detail kontak");
+        if (!res.ok) throw new Error("Gagal mengambil data detail Info");
         
         const responseData = await res.json();
         const data = responseData.data || responseData;
@@ -42,17 +42,17 @@ export default function EditKontak() {
         });
       } catch (error) {
         console.error(error);
-        alert("Gagal memuat data kontak terkini.");
-        navigate("/kontak");
+        alert("Gagal memuat data Info terkini.");
+        navigate("/info");
       } finally {
         setFetching(false);
       }
     };
 
-    if (id) fetchCurrentKontak();
+    if (id) fetchCurrentInfo();
   }, [id, reset, navigate]);
 
-  const onSubmit = async (data: KontakForm) => {
+  const onSubmit = async (data: InfoForm) => {
     try {
       setLoading(true);
       const res = await fetch(`${API_URL}/${id}`, {
@@ -62,10 +62,10 @@ export default function EditKontak() {
       });
 
       const result = await res.json();
-      if (!res.ok) throw new Error(result.message || "Gagal memperbarui data kontak");
+      if (!res.ok) throw new Error(result.message || "Gagal memperbarui data Info");
 
-      alert("Data kontak berhasil diperbarui!");
-      navigate("/kontak");
+      alert("Data Info berhasil diperbarui!");
+      navigate("/info");
     } catch (error) {
       if (error instanceof Error) alert(error.message);
     } finally {
@@ -86,7 +86,7 @@ export default function EditKontak() {
     <div className="p-2">
         {/* HEADER FORM */}
         <div className="border-b border-gray-100 p-6">
-          <h1 className="text-3xl font-bold text-gray-900">Edit Data Kontak</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Edit Data Info</h1>
           <p className="text-gray-500 mt-1">Perbarui nomor hubungi kami dan akun media sosial resmi mading digital.</p>
         </div>
 
@@ -166,7 +166,7 @@ export default function EditKontak() {
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
             <button 
               type="button" 
-              onClick={() => navigate("/kontak")} 
+              onClick={() => navigate("/info")} 
               className="px-5 py-2.5 rounded-xl border border-gray-300 text-sm font-medium hover:bg-gray-50 transition-colors"
             >
               Batal

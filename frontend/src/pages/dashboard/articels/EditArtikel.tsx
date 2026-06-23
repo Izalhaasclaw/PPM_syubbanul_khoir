@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Loader2, ImageIcon, FileText } from "lucide-react";
-import { useState } from "react";
-import { API } from "../../../lib/axios"; // 👈 1. Hubungkan ke instance Axios kamu
+import { useState, useEffect } from "react";
+import { API } from "../../../lib/axios"; // 👈 Hubungkan ke instance Axios kamu
 
 interface ArtikelForm {
   judul: string;
@@ -10,58 +10,100 @@ interface ArtikelForm {
   foto: string;
 }
 
-export default function CreateArtikel() {
+export default function EditArtikel() {
+  const { id } = useParams<{ id: string }>(); // 👈 Mengambil ID dari parameter URL
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true); // Loading saat memuat data awal artikel
+  const [waktuPembuatan, setWaktuPembuatan] = useState("");
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<ArtikelForm>();
 
-  // Memantau input form secara real-time
+  // Memantau input form secara real-time untuk komponen Live Preview
   const judulPreview = watch("judul");
   const fotoPreview = watch("foto");
   const isiPreview = watch("isi");
 
-  // 👈 2. Menggunakan API.post untuk mengirim data
+  // 👈 Fetch data artikel lama berdasarkan ID
+  useEffect(() => {
+    const fetchDetailArtikel = async () => {
+      try {
+        setFetching(true);
+        const res = await API.get(`/artikel/${id}`);
+        const responseData = res.data;
+        const artikel = responseData.data || responseData.artikel || responseData;
+
+        if (artikel) {
+          // Isi data ke dalam form react-hook-form
+          reset({
+            judul: artikel.judul,
+            isi: artikel.isi,
+            foto: artikel.foto,
+          });
+
+          // Simpan tanggal pembuatan asli untuk ditampilkan di preview
+          if (artikel.created_at) {
+            const dateParsed = new Date(artikel.created_at).toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }) + ` ${new Date(artikel.created_at).toLocaleTimeString("id-ID")} WIB`;
+            setWaktuPembuatan(dateParsed);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Gagal memuat detail data artikel.");
+        navigate("/artikel");
+      } finally {
+        setFetching(false);
+      }
+    };
+
+    if (id) fetchDetailArtikel();
+  }, [id, reset, navigate]);
+
+  // 👈 Kirim pembaruan menggunakan API.put
   const onSubmit = async (data: ArtikelForm) => {
     try {
       setLoading(true);
       const payload = {
         ...data,
-        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
 
-      // Mengirim data menggunakan instance Axios
-      await API.post("/artikel", payload);
+      await API.put(`/artikel/${id}`, payload);
 
-      alert("Artikel berhasil diterbitkan!");
+      alert("Artikel berhasil diperbarui!");
       navigate("/artikel");
     } catch (error: any) {
       console.error(error);
-      // Mengambil pesan error dari response backend jika tersedia
-      const errorMessage = error.response?.data?.message || "Gagal menerbitkan artikel";
+      const errorMessage = error.response?.data?.message || "Gagal memperbarui artikel";
       alert(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  // Format tanggal + waktu presisi untuk simulasi mading/berita nasional
-  const waktuSekarang =
-    new Date().toLocaleDateString("id-ID", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }) + ` ${new Date().toLocaleTimeString("id-ID")} WIB`;
+  if (fetching) {
+    return (
+      <div className="flex flex-col items-center justify-center py-40 text-gray-400">
+        <Loader2 className="animate-spin mb-2" size={40} />
+        <p>Memuat data artikel lama...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-2">
       <div className="border-b border-gray-100 p-2">
-        <h1 className="text-3xl font-bold text-gray-900">Create Artikel</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Edit Artikel</h1>
       </div>
 
       <form
@@ -155,9 +197,9 @@ export default function CreateArtikel() {
                 {judulPreview || "Lorem Ipsum Dolor sit Amet"}
               </h1>
 
-              {/* 2. Metadata: Tanggal & Simulasi Tombol Share */}
+              {/* 2. Metadata: Tanggal asli pembuatan artikel */}
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4 text-xs text-gray-400 font-medium">
-                <div>{waktuSekarang}</div>
+                <div>{waktuPembuatan || "Memuat tanggal..."}</div>
               </div>
 
               {/* 3. Komponen Foto Cover Utama */}
@@ -215,7 +257,7 @@ export default function CreateArtikel() {
             ) : (
               <>
                 <FileText size={18} />
-                Terbitkan Artikel
+                Simpan Perubahan
               </>
             )}
           </button>

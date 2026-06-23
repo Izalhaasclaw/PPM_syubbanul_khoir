@@ -7,21 +7,21 @@ export const getUser = async (req: Request, res: Response) => {
     try {
         const allUser = await prisma.user.findMany({
             orderBy: {
-                createdAt: "desc",
+                createdAt: "desc", // Menampilkan yang terbaru di atas
             },
         });
 
-        //tampilkan data
-        res.status(200).json({ message: "Data berhasil ditampilkan", user: (allUser) });
-
-    } catch (error) {
-
-        // jika error
-        res.status(500).json({
-            message: "Error",
-            error,
+        // PERBAIKAN: Mengubah key 'user' menjadi 'data' agar sinkron dengan Frontend React
+        return res.status(200).json({ 
+            message: "Data berhasil ditampilkan", 
+            data: allUser 
         });
 
+    } catch (error) {
+        return res.status(500).json({
+            message: "Gagal mengambil data user",
+            error,
+        });
     }
 };
 

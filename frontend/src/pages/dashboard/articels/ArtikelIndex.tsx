@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { API } from "../../../lib/axios"; // 👈 1. Hubungkan ke instance Axios kamu
 import {
   Plus,
   Edit,
@@ -18,21 +19,21 @@ interface Artikel {
   created_at: string;
 }
 
-const API_URL = "http://localhost:3000/artikel";
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 7;
 
 export default function ArtikelIndex() {
   const [artikelList, setArtikelList] = useState<Artikel[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // 👈 2. Menggunakan API.get("/artikel")
   const fetchArtikel = async () => {
     try {
       setLoading(true);
-      const res = await fetch(API_URL);
-      if (!res.ok) throw new Error("Gagal mengambil data artikel");
-
-      const responseData = await res.json();
+      const res = await API.get("/artikel");
+      
+      // Axios otomatis mem-parse response ke res.data
+      const responseData = res.data;
       const result = responseData.data || responseData.artikel || responseData;
 
       if (Array.isArray(result)) {
@@ -48,6 +49,7 @@ export default function ArtikelIndex() {
     }
   };
 
+  // 👈 3. Menggunakan API.delete(`/artikel/${id}`)
   const handleDelete = async (id: number, judul: string) => {
     const confirmDelete = window.confirm(
       `Apakah kamu yakin ingin menghapus artikel "${judul}"?`,
@@ -55,17 +57,13 @@ export default function ArtikelIndex() {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      if (res.ok) {
-        alert("Artikel berhasil dihapus!");
-        setArtikelList((prev) => prev.filter((item) => item.id !== id));
-      } else {
-        const result = await res.json();
-        alert(result.message || "Gagal menghapus artikel.");
-      }
-    } catch (error) {
+      await API.delete(`/artikel/${id}`);
+      alert("Artikel berhasil dihapus!");
+      setArtikelList((prev) => prev.filter((item) => item.id !== id));
+    } catch (error: any) {
       console.error(error);
-      alert("Terjadi kesalahan koneksi.");
+      const errorMessage = error.response?.data?.message || "Gagal menghapus artikel.";
+      alert(errorMessage);
     }
   };
 

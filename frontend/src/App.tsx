@@ -6,14 +6,21 @@ import UserIndex from "./pages/dashboard/user/UserIndex";
 import CreateUser from "./pages/dashboard/user/CreateUser";
 import ArtikelIndex from "./pages/dashboard/articels/ArtikelIndex";
 import CreateArtikel from "./pages/dashboard/articels/CreateArtikel";
-import KontakIndex from "./pages/dashboard/kontak/KontakIndex";
-import EditKontak from "./pages/dashboard/kontak/EditKontak";
+import InfoIndex from "./pages/dashboard/informasi/InfoIndex";
+import EditInfo from "./pages/dashboard/informasi/EditInfo";
 import RouteGuard from "./routes/RouteGuard";
 import LoginForm from "./pages/LoginForm";
 import AuthLayout from "./layouts/AuthLayout";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import EditUser from "./pages/dashboard/user/EditUser";
+import EditArtikel from "./pages/dashboard/articels/EditArtikel";
+
+const queryClient = new QueryClient();
 
 function App() {
+
   return (
+    <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <Routes>
         <Route element={<AuthLayout />}>
@@ -25,14 +32,19 @@ function App() {
             <Route path="/dashboard" element={<DashboardIndex />} />
             <Route path="/user" element={<UserIndex />} />
             <Route path="/user/create-user" element={<CreateUser />} />
+            <Route path="/user/edit-user/:id" element={<EditUser />} />
+            
             <Route path="/artikel" element={<ArtikelIndex />} />
             <Route path="/artikel/create-artikel" element={<CreateArtikel />} />
-            <Route path="/kontak" element={<KontakIndex />} />
-            <Route path="/kontak/edit-kontak/:id" element={<EditKontak />} />
+            <Route path="/artikel/edit-artikel/:id" element={<EditArtikel />} />
+            
+            <Route path="/info" element={<InfoIndex />} />
+            <Route path="/info/edit-info/:id" element={<EditInfo />} />
           </Route>
         </Route>
       </Routes>
     </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 

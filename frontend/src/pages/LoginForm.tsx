@@ -6,6 +6,10 @@ import { InputPassword } from "../components/ui/InputPassword";
 import { Button } from "../components/ui/Button";
 import { useNavigate } from "react-router-dom";
 import { authStore } from "../store/AuthStore";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { LoginRequest, LoginResponse } from "../types/Auth";
+import { API } from "../lib/axios";
+import type { AxiosError } from "axios";
 
 type FormData = {
   username: string;
@@ -13,12 +17,13 @@ type FormData = {
 };
 
 const schema = z.object({
-  username: z.string().min(2,"username tidak valid"),
+  username: z.string().min(2, "Username tidak valid"),
   password: z.string().min(6, "Password harus minimal 6 karakter"),
 });
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const login = authStore((state) => state.login);
 
   const {
@@ -27,21 +32,27 @@ export default function LoginForm() {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  //  const {formState: { errors }} = useForm();
+  const LoginMutation = useMutation({
+    mutationFn: async (credentials: LoginRequest) => {
+      const response = await API.post<LoginResponse>("/auth", credentials);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      login({
+        user: data.user,
+        token: data.token,
+      });
+      queryClient.setQueryData(["user"], data.user);
+      navigate("/dashboard");
+    },
+    onError: (error: AxiosError) => {
+      const message = error.message || "Kesalahan Berpikir Wok";
+      alert("Login Gagal: " + message);
+    },
+  });
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
-    if (
-      data.username === "jamal" &&
-      data.password === "12345678"
-    ) {
-      alert("Login Berhasil");
-      navigate("/dashboard");
-
-      login(data.username);
-    } else {
-      alert("Login Gagal");
-    }
+    LoginMutation.mutate(data);
   };
 
   return (

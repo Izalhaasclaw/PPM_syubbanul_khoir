@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { API } from "../../../lib/axios"; // 👈 Hubungkan ke instance Axios kamu
 import {
   Plus,
   Edit,
@@ -11,26 +12,21 @@ import {
   EyeOff,
 } from "lucide-react";
 
-// PERBAIKAN: Interface disesuaikan dengan kolom baru
 interface User {
   id: number;
   name: string;
-  username: string; // Menggantikan email
+  username: string; 
   password?: string;
-  foto: string;     // Menggantikan image
+  foto: string; 
 }
 
-const API_URL = "http://localhost:3000/users";
 const ITEMS_PER_PAGE = 6;
 
 export default function UserIndex() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const [visiblePasswords, setVisiblePasswords] = useState<
-    Record<number, boolean>
-  >({});
+  const [visiblePasswords, setVisiblePasswords] = useState<Record<number, boolean>>({});
 
   const togglePasswordVisibility = (id: number) => {
     setVisiblePasswords((prev) => ({
@@ -39,13 +35,13 @@ export default function UserIndex() {
     }));
   };
 
+  // 👈 Menggunakan API.get("/users")
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await fetch(API_URL);
-      if (!res.ok) throw new Error("Gagal mengambil data user");
-
-      const responseData = await res.json();
+      const res = await API.get("/users");
+      
+      const responseData = res.data;
       const result = responseData.data || responseData.users || responseData;
 
       if (Array.isArray(result)) {
@@ -61,6 +57,7 @@ export default function UserIndex() {
     }
   };
 
+  // 👈 Menggunakan API.delete(`/users/${id}`)
   const handleDelete = async (id: number, name: string) => {
     const confirmDelete = window.confirm(
       `Apakah kamu yakin ingin menghapus user "${name}"?`,
@@ -68,17 +65,13 @@ export default function UserIndex() {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      if (res.ok) {
-        alert("User berhasil dihapus!");
-        setUsers((prev) => prev.filter((user) => user.id !== id));
-      } else {
-        const result = await res.json();
-        alert(result.message || "Gagal menghapus user.");
-      }
-    } catch (error) {
+      await API.delete(`/users/${id}`);
+      alert("User berhasil dihapus!");
+      setUsers((prev) => prev.filter((user) => user.id !== id));
+    } catch (error: any) {
       console.error(error);
-      alert("Terjadi kesalahan koneksi.");
+      const errorMessage = error.response?.data?.message || "Gagal menghapus user.";
+      alert(errorMessage);
     }
   };
 
@@ -116,87 +109,49 @@ export default function UserIndex() {
           <>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                {/* PERBAIKAN: Header Tabel Baru */}
                 <thead className="bg-[#0F172A] border-b border-[#0F172A] ">
                   <tr>
-                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase text-center w-20">
-                      ID
-                    </th>
-                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase">
-                      Foto
-                    </th>
-                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase">
-                      Nama
-                    </th>
-                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase">
-                      Username
-                    </th>
-                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase">
-                      Password
-                    </th>
-                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase text-center w-32">
-                      Actions
-                    </th>
+                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase text-center w-20">ID</th>
+                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase">Foto</th>
+                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase">Nama</th>
+                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase">Username</th>
+                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase">Password</th>
+                    <th className="px-6 py-4 text-sm font-semibold text-white uppercase text-center w-32">Actions</th>
                   </tr>
                 </thead>
 
                 <tbody className="divide-y divide-gray-50">
                   {currentUsers.length > 0 ? (
                     currentUsers.map((user) => (
-                      <tr
-                        key={user.id}
-                        className="hover:bg-gray-50/50 transition-colors"
-                      >
-                        <td className="px-6 py-4 text-center font-semibold text-gray-500">
-                          #{user.id}
-                        </td>
-                        
-                        {/* PERBAIKAN: Kolom Foto */}
+                      <tr key={user.id} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-6 py-4 text-center font-semibold text-gray-500">#{user.id}</td>
                         <td className="px-6 py-4">
                           <img
                             src={user.foto || "https://placehold.co/150"}
                             alt={user.name}
                             className="w-12 h-12 rounded-full object-cover border"
                             onError={(e) => {
-                              (e.target as HTMLImageElement).src =
-                                "https://placehold.co/150";
+                              (e.target as HTMLImageElement).src = "https://placehold.co/150";
                             }}
                           />
                         </td>
-                        
-                        <td className="px-6 py-4 font-semibold text-gray-800">
-                          {user.name}
-                        </td>
-
-                        {/* PERBAIKAN: Kolom Username (Menggantikan Email) */}
-                        <td className="px-6 py-4 text-gray-600">
-                          {user.username}
-                        </td>
-
+                        <td className="px-6 py-4 font-semibold text-gray-800">{user.name}</td>
+                        <td className="px-6 py-4 text-gray-600">{user.username}</td>
                         <td className="px-6 py-4 text-gray-600 font-mono text-sm">
                           <div className="flex items-center gap-2">
                             <span>
-                              {visiblePasswords[user.id]
-                                ? user.password || "-"
-                                : "••••••••"}
+                              {visiblePasswords[user.id] ? user.password || "-" : "••••••••"}
                             </span>
                             {user.password && (
                               <button
-                                onClick={() =>
-                                  togglePasswordVisibility(user.id)
-                                }
+                                onClick={() => togglePasswordVisibility(user.id)}
                                 className="text-gray-400 hover:text-gray-600 transition-colors"
                               >
-                                {visiblePasswords[user.id] ? (
-                                  <EyeOff size={16} />
-                                ) : (
-                                  <Eye size={16} />
-                                )}
+                                {visiblePasswords[user.id] ? <EyeOff size={16} /> : <Eye size={16} />}
                               </button>
                             )}
                           </div>
                         </td>
-
                         <td className="px-6 py-4">
                           <div className="flex justify-center gap-2">
                             <Link
@@ -219,10 +174,7 @@ export default function UserIndex() {
                     ))
                   ) : (
                     <tr>
-                      <td
-                        colSpan={6}
-                        className="text-center py-20 text-gray-400"
-                      >
+                      <td colSpan={6} className="text-center py-20 text-gray-400">
                         Data user tidak ditemukan.
                       </td>
                     </tr>
@@ -231,16 +183,11 @@ export default function UserIndex() {
               </table>
             </div>
 
-            {/* Pagination Footer */}
             <div className="bg-white px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-sm text-gray-500">
-                Menampilkan{" "}
-                <span className="font-medium">{indexOfFirstItem + 1}</span>{" "}
-                sampai{" "}
-                <span className="font-medium">
-                  {Math.min(indexOfLastItem, users.length)}
-                </span>{" "}
-                dari <span className="font-medium">{users.length}</span> data
+                Menampilkan <span className="font-medium">{indexOfFirstItem + 1}</span> sampai{" "}
+                <span className="font-medium">{Math.min(indexOfLastItem, users.length)}</span> dari{" "}
+                <span className="font-medium">{users.length}</span> data
               </div>
               <div className="flex items-center gap-2">
                 <button
@@ -252,7 +199,7 @@ export default function UserIndex() {
                 </button>
                 <button
                   disabled={currentPage === totalPages || totalPages === 0}
-                  onClick={() => setCurrentPage((p) => p + 1)}
+                  onClick={() => setCurrentPage((p) => p + 1)} // Perbaikan: Tombol Next sekarang bernilai + 1
                   className="p-2 border rounded-lg disabled:opacity-50"
                 >
                   <ChevronRight size={20} />
