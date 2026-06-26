@@ -32,7 +32,7 @@ export default function ArtikelIndex() {
   const fetchArtikel = async () => {
     try {
       setLoading(true);
-      const res = await API.get("/artikel");
+      const res = await API.get("/artikel-index");
       
       
       const responseData = res.data;
@@ -59,7 +59,7 @@ export default function ArtikelIndex() {
     if (!confirmDelete) return;
 
     try {
-      await API.delete(`/artikel/${id}`);
+      await API.delete(`/artikel-index/${id}`);
       alert("Artikel berhasil dihapus!");
       setArtikelList((prev) => prev.filter((item) => item.id !== id));
     } catch (error: any) {
@@ -100,7 +100,7 @@ export default function ArtikelIndex() {
           <h1 className="text-3xl font-bold text-gray-900">Data Artikel</h1>
           <p className="text-gray-500">Kelola konten, berita, dan edukasi mading digital.</p>
         </div>
-        <Link to="/artikel/create-artikel">
+        <Link to="/artikel-index/create-artikel">
           <button className="bg-[#35A2FD] hover:bg-[#1D8DF5] text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition-all shadow-sm">
             <Plus size={20} />
             Tambah Artikel
@@ -173,7 +173,7 @@ export default function ArtikelIndex() {
                         <td className="px-6 py-4">
                           <div className="flex justify-center gap-2">
                             <Link
-                              to={`/artikel/edit-artikel/${item.id}`}
+                              to={`/artikel-index/edit-artikel/${item.id}`}
                               className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg"
                               title="Edit Artikel"
                             >

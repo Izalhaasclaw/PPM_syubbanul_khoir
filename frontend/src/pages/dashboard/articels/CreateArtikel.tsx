@@ -49,14 +49,14 @@ export default function CreateArtikel() {
       }
 
       
-      await API.post("/artikel", formData, {
+      await API.post("/artikel-index", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       alert("Artikel berhasil diterbitkan!");
-      navigate("/artikel");
+      navigate("/artikel-index");
     } catch (error: any) {
       console.error(error);
       const errorMessage = error.response?.data?.message || "Gagal menerbitkan artikel";
@@ -206,7 +206,7 @@ export default function CreateArtikel() {
         <div className="lg:col-span-12 flex justify-end gap-3 pt-4 border-t border-gray-100">
           <button
             type="button"
-            onClick={() => navigate("/artikel")}
+            onClick={() => navigate("/artikel-index")}
             className="px-5 py-2.5 rounded-xl border border-gray-300 text-sm font-medium hover:bg-gray-50 transition-colors"
           >
             Batal

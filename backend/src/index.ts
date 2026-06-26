@@ -14,15 +14,15 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-res.send("Ini adalah API untuk PPM Syubbanul Khoir");
+  res.send("Ini adalah API untuk PPM Syubbanul Khoir");
 });
 
 app.use("/users", userRoute);
-app.use("/artikel", artikelRoute);
-app.use("/jadwal", jadwalRoute);
+app.use("/artikel-index", artikelRoute);
+app.use("/jadwal-index", jadwalRoute);
 app.use("/auth", authRoute);
 app.use("/informasi", infoRoute);
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });

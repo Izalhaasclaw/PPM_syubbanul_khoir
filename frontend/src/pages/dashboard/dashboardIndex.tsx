@@ -13,7 +13,7 @@ export default function DashboardIndex() {
         setLoading(true);
         
         const [resArtikel, resUser] = await Promise.all([
-          API.get("/artikel").catch(() => ({ data: { data: [] } })),
+          API.get("/artikel-index").catch(() => ({ data: { data: [] } })),
           API.get("/user").catch(() => ({ data: { data: [] } })), 
         ]);
 

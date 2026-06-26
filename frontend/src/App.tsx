@@ -25,46 +25,49 @@ import DetailArtikel from "./pages/DetailArtikel";
 const queryClient = new QueryClient();
 
 function App() {
-
   return (
     <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <Routes>
-
-        <Route path="/" element={<MainLayouts />}>
-          <Route index element={<Beranda />} />
-          <Route path="/Artikel" element={<Artikel />} />
-          <Route path="/Artikel/:id" element={<DetailArtikel />} />
-        </Route>
-
-        <Route element={<AuthLayout />}>
-          <Route path="/login-form" element={<LoginForm />} />
-        </Route>
-
-        <Route element={<RouteGuard />}>
-          <Route element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<DashboardIndex />} />
-            <Route path="/user" element={<UserIndex />} />
-            <Route path="/user/create-user" element={<CreateUser />} />
-            <Route path="/user/edit-user/:id" element={<EditUser />} />
-            
-            <Route path="/artikel" element={<ArtikelIndex />} />
-            <Route path="/artikel/create-artikel" element={<CreateArtikel />} />
-            <Route path="/artikel/edit-artikel/:id" element={<EditArtikel />} />
-
-            <Route path="/jadwal" element={<JadwalIndex />} />
-            <Route path="/jadwal/create-jadwal" element={<CreateJadwal />} />
-            <Route path="/jadwal/edit-jadwal/:id" element={<EditJadwal />} />
-            
-            <Route path="/info" element={<InfoIndex />} />
-            <Route path="/info/edit-info/:id" element={<EditInfo />} />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainLayouts />}>
+            <Route index element={<Beranda />} />
+            <Route path="/Artikel" element={<Artikel />} />
+            <Route path="/Artikel/:id" element={<DetailArtikel />} />
           </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+
+          <Route element={<AuthLayout />}>
+            <Route path="/login-form" element={<LoginForm />} />
+          </Route>
+
+          <Route element={<RouteGuard />}>
+            <Route element={<DashboardLayout />}>
+              <Route path="/dashboard" element={<DashboardIndex />} />
+              <Route path="/user" element={<UserIndex />} />
+              <Route path="/user/create-user" element={<CreateUser />} />
+              <Route path="/user/edit-user/:id" element={<EditUser />} />
+
+              <Route path="/artikel-index" element={<ArtikelIndex />} />
+              <Route
+                path="/artikel-index/create-artikel"
+                element={<CreateArtikel />}
+              />
+              <Route
+                path="/artikel-index/edit-artikel/:id"
+                element={<EditArtikel />}
+              />
+
+              <Route path="/jadwal-index" element={<JadwalIndex />} />
+              <Route path="/jadwal-index/create-jadwal" element={<CreateJadwal />} />
+              <Route path="/jadwal-index/edit-jadwal/:id" element={<EditJadwal />} />
+
+              <Route path="/info" element={<InfoIndex />} />
+              <Route path="/info/edit-info/:id" element={<EditInfo />} />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 }
-
 
 export default App;

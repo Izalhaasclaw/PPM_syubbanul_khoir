@@ -44,7 +44,7 @@ export default function EditArtikel() {
     const fetchDetailArtikel = async () => {
       try {
         setFetching(true);
-        const res = await API.get(`/artikel/${id}`);
+        const res = await API.get(`/artikel-index/${id}`);
         const responseData = res.data;
         const artikel = responseData.data || responseData.artikel || responseData;
 
@@ -71,7 +71,7 @@ export default function EditArtikel() {
       } catch (error) {
         console.error(error);
         alert("Gagal memuat detail data artikel.");
-        navigate("/artikel");
+        navigate("/artikel-index");
       } finally {
         setFetching(false);
       }
@@ -95,14 +95,14 @@ export default function EditArtikel() {
       }
 
       
-      await API.put(`/artikel/${id}`, formData, {
+      await API.put(`/artikel-index/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       alert("Artikel berhasil diperbarui!");
-      navigate("/artikel");
+      navigate("/artikel-index");
     } catch (error: any) {
       console.error(error);
       const errorMessage = error.response?.data?.message || "Gagal memperbarui artikel";
@@ -251,7 +251,7 @@ export default function EditArtikel() {
         <div className="lg:col-span-12 flex justify-end gap-3 pt-4 border-t border-gray-100">
           <button
             type="button"
-            onClick={() => navigate("/artikel")}
+            onClick={() => navigate("/artikel-index")}
             className="px-5 py-2.5 rounded-xl border border-gray-300 text-sm font-medium hover:bg-gray-50 transition-colors"
           >
             Batal

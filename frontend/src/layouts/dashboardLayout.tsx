@@ -5,11 +5,9 @@ import logo from "../assets/logo_syubbanul.png";
 export default function DashboardLayout() {
   const logout = authStore((state) => state.logout);
   const isAuthenticated = authStore((state) => state.isAuthenticated);
-  
-  
-  const user = authStore((state) => state.user); 
 
-  
+  const user = authStore((state) => state.user);
+
   if (!isAuthenticated) {
     return <Navigate to="/login-form" replace />;
   }
@@ -17,8 +15,8 @@ export default function DashboardLayout() {
   const menus = [
     { name: "Dashboard", path: "/dashboard" },
     { name: "User", path: "/user" },
-    { name: "Artikel", path: "/artikel" },
-    { name: "Jadwal", path: "/jadwal" },
+    { name: "Artikel", path: "/artikel-index" },
+    { name: "Jadwal", path: "/jadwal-index" },
     { name: "Info", path: "/info" },
   ];
 
@@ -26,17 +24,22 @@ export default function DashboardLayout() {
     <div className="flex w-full min-h-screen bg-[#E5E7EB]">
       <div className="bg-[#0F172A] w-80 flex flex-col justify-between p-8 shadow-2xl">
         <div className="flex flex-col gap-10">
-          
           {}
           <div className="flex flex-col items-center text-center mt-4">
             <Link to="/dashboard">
               {}
-              <div className={`w-28 h-28 flex items-center justify-center mb-4 overflow-hidden ${
-                user?.foto ? "rounded-full border-2 border-[#35A2FD]" : ""
-              }`}>
+              <div
+                className={`w-28 h-28 flex items-center justify-center mb-4 overflow-hidden ${
+                  user?.foto ? "rounded-full border-2 border-[#35A2FD]" : ""
+                }`}
+              >
                 <img
-                  src={user?.foto || logo} 
-                  alt={user?.username ? `Foto ${user.username}` : "Logo Syubbanul Khoir"}
+                  src={user?.foto || logo}
+                  alt={
+                    user?.username
+                      ? `Foto ${user.username}`
+                      : "Logo Syubbanul Khoir"
+                  }
                   className={`w-full h-full ${
                     user?.foto ? "object-cover" : "object-contain"
                   }`}
@@ -66,8 +69,8 @@ export default function DashboardLayout() {
                       className={({ isActive }) =>
                         `block w-full py-2 px-4 text-center text-lg font-medium rounded-xl transition-all shadow-md ${
                           isActive
-                            ? "bg-[#35A2FD] text-white hover:bg-[#1D8DF5]" 
-                            : "bg-transparent text-white hover:bg-slate-800" 
+                            ? "bg-[#35A2FD] text-white hover:bg-[#1D8DF5]"
+                            : "bg-transparent text-white hover:bg-slate-800"
                         }`
                       }
                     >
