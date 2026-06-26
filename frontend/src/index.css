@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+:root {
+  --font-sans: "Poppins", sans-serif;
+}

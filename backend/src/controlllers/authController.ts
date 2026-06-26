@@ -5,21 +5,21 @@ import jwt from 'jsonwebtoken';
 
 export const login = async (req: Request, res: Response) => {
     try {
-        const { name, password } = req.body;
+        const { username, password } = req.body;
 
-        if (!name || !password) {
+        if (!username || !password) {
             return res.status(400).json({
-                message: "Name and password are required"
+                message: "Username and password are required"
             });
         }
 
        const existingUser = await prisma.user.findFirst({
-                where: { name },
+                where: { username: username },
             });
 
         if (!existingUser) {
             return res.status(401).json({
-                message: "Name or password is incorrect"
+                message: "Username or password is incorrect"
             });
         }
 
@@ -30,7 +30,7 @@ export const login = async (req: Request, res: Response) => {
 
         if (!isMatch) {
             return res.status(401).json({
-                message: "Name or password is incorrect"
+                message: "Username or password is incorrect"
             });
         }
 
@@ -43,7 +43,7 @@ export const login = async (req: Request, res: Response) => {
         const token = jwt.sign(
             {
                 userId: existingUser.id,
-                name: existingUser.name,
+                username: existingUser.username,
             },
             jwtSecret,
             {
@@ -55,7 +55,8 @@ export const login = async (req: Request, res: Response) => {
             message: "Login berhasil",
             user: {
                 id: existingUser.id,
-                name: existingUser.name,
+                username: existingUser.username,
+                foto: existingUser.foto,
             },
             token,
         });
