@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { API } from "../../../lib/axios"; // 👈 1. Hubungkan ke instance Axios kamu
+import { API } from "../../../lib/axios"; 
 import {
   Plus,
   Edit,
@@ -17,7 +17,7 @@ interface Artikel {
   foto: string;
   judul: string;
   isi: string;
-  createdAt: string; // 👈 Ubah dari created_at menjadi createdAt
+  createdAt: string; 
 }
 
 
@@ -28,13 +28,13 @@ export default function ArtikelIndex() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // 👈 2. Menggunakan API.get("/artikel")
+  
   const fetchArtikel = async () => {
     try {
       setLoading(true);
       const res = await API.get("/artikel");
       
-      // Axios otomatis mem-parse response ke res.data
+      
       const responseData = res.data;
       const result = responseData.data || responseData.artikel || responseData;
 
@@ -51,7 +51,7 @@ export default function ArtikelIndex() {
     }
   };
 
-  // 👈 3. Menggunakan API.delete(`/artikel/${id}`)
+  
   const handleDelete = async (id: number, judul: string) => {
     const confirmDelete = window.confirm(
       `Apakah kamu yakin ingin menghapus artikel "${judul}"?`,
@@ -78,7 +78,7 @@ export default function ArtikelIndex() {
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
   const currentArtikel = artikelList.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Fungsi pembantu untuk memformat tanggal
+  
   const formatTanggal = (dateString: string) => {
     try {
       return new Date(dateString).toLocaleDateString("id-ID", {
@@ -201,7 +201,7 @@ export default function ArtikelIndex() {
               </table>
             </div>
 
-            {/* Pagination Footer */}
+            {}
             <div className="bg-white px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-sm text-gray-500">
                 Menampilkan <span className="font-medium">{indexOfFirstItem + 1}</span> sampai{" "}

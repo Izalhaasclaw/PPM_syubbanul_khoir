@@ -8,7 +8,7 @@ interface UserForm {
   name: string;
   username: string; 
   password: string;
-  foto: FileList; // 👈 1. Diubah menjadi FileList
+  foto: FileList; 
 }
 
 export default function CreateUser() {
@@ -18,9 +18,9 @@ export default function CreateUser() {
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<UserForm>();
   
-  const fotoWatch = watch("foto"); // 👈 2. Pantau input file foto
+  const fotoWatch = watch("foto"); 
 
-  // Fungsi pembantu untuk membuat URL blob lokal dari file yang dipilih
+  
   const getPreviewUrl = () => {
     if (fotoWatch && fotoWatch.length > 0) {
       return URL.createObjectURL(fotoWatch[0]);
@@ -28,7 +28,7 @@ export default function CreateUser() {
     return null;
   };
 
-  // 👈 3. Mengubah payload JSON biasa menjadi FormData
+  
   const onSubmit = async (data: UserForm) => {
     try {
       setLoading(true);
@@ -38,12 +38,12 @@ export default function CreateUser() {
       formData.append("username", data.username);
       formData.append("password", data.password);
       
-      // Lampirkan file biner gambar jika ada
+      
       if (data.foto && data.foto.length > 0) {
         formData.append("foto", data.foto[0]);
       }
 
-      // Kirim data multipart/form-data ke backend
+      
       await API.post("/users", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -69,7 +69,7 @@ export default function CreateUser() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6">
         <div className="space-y-5">
-          {/* NAMA LENGKAP */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">Nama Lengkap</label>
             <input
@@ -83,7 +83,7 @@ export default function CreateUser() {
             {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
           </div>
 
-          {/* USERNAME */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">Username</label>
             <input
@@ -100,7 +100,7 @@ export default function CreateUser() {
             {errors.username && <p className="text-sm text-red-500">{errors.username.message}</p>}
           </div>
 
-          {/* PASSWORD */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">Password</label>
             <div className="relative">
@@ -126,11 +126,11 @@ export default function CreateUser() {
             {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
           </div>
 
-          {/* INPUT FILE FOTO PROFIL */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">Foto Profil</label>
             <input
-              type="file" // 👈 4. Diubah menjadi tipe file asli
+              type="file" 
               accept="image/*"
               {...register("foto", { required: "Foto profil wajib diisi" })}
               className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
@@ -139,11 +139,11 @@ export default function CreateUser() {
           </div>
         </div>
 
-        {/* PREVIEW FOTO */}
+        {}
         <div className="flex flex-col items-center">
           <label className="text-sm font-semibold text-gray-700 mb-2">Preview Foto</label>
           <div className="w-4/5 aspect-square border border-dashed border-gray-300 rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center">
-            {getPreviewUrl() ? ( // 👈 5. Gunakan fungsi blob preview lokal
+            {getPreviewUrl() ? ( 
               <img
                 src={getPreviewUrl()!}
                 alt="Preview"
@@ -158,7 +158,7 @@ export default function CreateUser() {
           </div>
         </div>
 
-        {/* ACTION BUTTONS */}
+        {}
         <div className="lg:col-span-2 flex justify-end gap-3 pt-4 border-t border-gray-100">
           <button 
             type="button" 

@@ -21,7 +21,7 @@ export default function JadwalIndex() {
       const res = await API.get("/jadwal");
       const responseData = res.data;
       
-      // Menyesuaikan dengan response backend: res.status(200).json({ data: allJadwal })
+      
       setJadwalData(responseData.data || responseData);
     } catch (error: any) {
       console.error(error);
@@ -38,7 +38,7 @@ export default function JadwalIndex() {
     try {
       await API.delete(`/jadwal/${id}`);
       alert("Jadwal berhasil dihapus!");
-      // Refresh data setelah berhasil menghapus
+      
       fetchJadwal();
     } catch (error: any) {
       console.error(error);
@@ -51,7 +51,7 @@ export default function JadwalIndex() {
     fetchJadwal();
   }, []);
 
-  // Format tanggal ke gaya lokal Indonesia (Contoh: 24 Juni 2026)
+  
   const formatTanggal = (dateString: string) => {
     try {
       const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
@@ -63,7 +63,7 @@ export default function JadwalIndex() {
 
   return (
     <div className="space-y-6 p-2">
-      {/* HEADER UTAMA */}
+      {}
       <div className="flex justify-between items-start">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold text-gray-900">Data Jadwal</h1>
@@ -78,7 +78,7 @@ export default function JadwalIndex() {
         </Link>
       </div>
 
-      {/* TABEL KONTEN */}
+      {}
       <div className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 text-gray-400">
@@ -102,12 +102,12 @@ export default function JadwalIndex() {
                 {jadwalData.length > 0 ? (
                   jadwalData.map((jadwal) => (
                     <tr key={jadwal.id} className="hover:bg-gray-50/50 transition-colors">
-                      {/* Acara */}
+                      {}
                       <td className="px-6 py-5 font-semibold text-gray-800 wrap-break-word">
                         {jadwal.acara}
                       </td>
                       
-                      {/* Lokasi */}
+                      {}
                       <td className="px-6 py-5 text-gray-600 text-sm wrap-break-word">
                         <div className="flex items-center gap-1.5 text-gray-700">
                           <MapPin size={16} className="text-gray-400 shrink-0" />
@@ -115,7 +115,7 @@ export default function JadwalIndex() {
                         </div>
                       </td>
                       
-                      {/* Tanggal */}
+                      {}
                       <td className="px-6 py-5 text-gray-600 text-sm">
                         <div className="flex items-center gap-1.5 text-gray-700">
                           <Calendar size={16} className="text-gray-400 shrink-0" />
@@ -123,7 +123,7 @@ export default function JadwalIndex() {
                         </div>
                       </td>
                       
-                      {/* Waktu */}
+                      {}
                       <td className="px-6 py-5 text-gray-600 text-sm">
                         <div className="flex items-center gap-1.5 text-gray-700">
                           <Clock size={16} className="text-gray-400 shrink-0" />
@@ -131,7 +131,7 @@ export default function JadwalIndex() {
                         </div>
                       </td>
 
-                      {/* Tombol Aksi */}
+                      {}
                       <td className="px-6 py-5 text-center">
                         <div className="flex justify-center items-center gap-2">
                           <Link to={`/jadwal/edit-jadwal/${jadwal.id}`}>

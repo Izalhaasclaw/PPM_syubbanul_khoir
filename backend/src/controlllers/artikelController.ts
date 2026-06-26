@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/db.js";
-import { put, del } from "@vercel/blob"; // 👈 Tambahkan put dan del dari Vercel Blob
+import { put, del } from "@vercel/blob"; 
 
-// Menampilkan semua artikel
+
 export const getArtikel = async (req: Request, res: Response) => {
   try {
     const allArtikel = await prisma.artikel.findMany({
@@ -23,12 +23,12 @@ export const getArtikel = async (req: Request, res: Response) => {
   }
 };
 
-// Menyimpan artikel baru (Upload ke Vercel Blob)
+
 export const saveArtikel = async (req: Request, res: Response) => {
   try {
-    const { judul, isi } = req.body; // 👈 foto dihapus dari req.body
+    const { judul, isi } = req.body; 
 
-    // Validasi file gambar dari multer
+    
     if (!req.file) {
       res.status(400).json({ message: "Foto artikel wajib diunggah" });
       return;
@@ -39,17 +39,17 @@ export const saveArtikel = async (req: Request, res: Response) => {
       return;
     }
 
-    // 1. Upload file buffer ke Vercel Blob
+    
     const blob = await put(req.file.originalname, req.file.buffer, {
       access: "public",
     });
 
-    // 2. Simpan URL Blob ke database TiDB
+    
     const newArtikel = await prisma.artikel.create({
       data: {
         judul,
         isi,
-        foto: blob.url, // 👈 Menyimpan URL string dari vercel storage
+        foto: blob.url, 
       },
     });
 
@@ -65,7 +65,7 @@ export const saveArtikel = async (req: Request, res: Response) => {
   }
 };
 
-// Menampilkan artikel berdasarkan ID
+
 export const showArtikelById = async (
   req: Request<{ id: string }>,
   res: Response
@@ -93,7 +93,7 @@ export const showArtikelById = async (
   }
 };
 
-// Update artikel (Ganti file lama di Vercel Blob jika ada upload baru)
+
 export const updateArtikelById = async (
   req: Request<{ id: string }>,
   res: Response
@@ -113,11 +113,11 @@ export const updateArtikelById = async (
     }
 
     const { judul, isi } = req.body;
-    let fotoUrl = existingArtikel.foto; // Default gunakan foto lama
+    let fotoUrl = existingArtikel.foto; 
 
-    // Jika user mengunggah file foto baru
+    
     if (req.file) {
-      // Hapus file foto lama di Vercel Blob agar hemat storage
+      
       if (existingArtikel.foto) {
         try {
           await del(existingArtikel.foto);
@@ -126,7 +126,7 @@ export const updateArtikelById = async (
         }
       }
 
-      // Upload file foto baru
+      
       const blob = await put(req.file.originalname, req.file.buffer, {
         access: "public",
       });
@@ -138,7 +138,7 @@ export const updateArtikelById = async (
       data: {
         judul: judul ?? existingArtikel.judul,
         isi: isi ?? existingArtikel.isi,
-        foto: fotoUrl, // Menggunakan url baru atau tetap yang lama
+        foto: fotoUrl, 
         updatedAt: new Date(),
       },
     });
@@ -155,7 +155,7 @@ export const updateArtikelById = async (
   }
 };
 
-// Hapus artikel beserta file gambarnya dari Vercel Blob
+
 export const deleteArtikelById = async (
   req: Request<{ id: string }>,
   res: Response
@@ -174,7 +174,7 @@ export const deleteArtikelById = async (
       return;
     }
 
-    // Hapus file dari Vercel Blob sebelum menghapus row data di TiDB
+    
     if (existingArtikel.foto) {
       try {
         await del(existingArtikel.foto);

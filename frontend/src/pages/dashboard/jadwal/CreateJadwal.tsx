@@ -20,7 +20,7 @@ export default function CreateJadwal() {
     try {
       setLoading(true);
       
-      // Backend mengekspektasikan data dalam format JSON standar
+      
       await API.post("/jadwal", data);
 
       alert("Jadwal baru berhasil ditambahkan!");
@@ -36,17 +36,17 @@ export default function CreateJadwal() {
 
   return (
     <div className="p-2">
-      {/* HEADER FORM */}
+      {}
       <div className="border-b border-gray-100 p-6">
         <h1 className="text-3xl font-bold text-gray-900">Tambah Jadwal Baru</h1>
         <p className="text-gray-500 mt-1">Buat agenda kegiatan atau acara mendatang untuk diinformasikan di mading.</p>
       </div>
 
-      {/* GRID INPUT FORM */}
+      {}
       <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
-          {/* NAMA ACARA */}
+          {}
           <div className="flex flex-col gap-2 md:col-span-2">
             <label className="text-sm font-semibold text-gray-700">Nama Acara / Kegiatan</label>
             <input
@@ -60,7 +60,7 @@ export default function CreateJadwal() {
             {errors.acara && <p className="text-sm text-red-500">{errors.acara.message}</p>}
           </div>
 
-          {/* LOKASI */}
+          {}
           <div className="flex flex-col gap-2 md:col-span-2">
             <label className="text-sm font-semibold text-gray-700">Lokasi Pelaksanaan</label>
             <input
@@ -74,7 +74,7 @@ export default function CreateJadwal() {
             {errors.lokasi && <p className="text-sm text-red-500">{errors.lokasi.message}</p>}
           </div>
 
-          {/* TANGGAL */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">Tanggal Acara</label>
             <input
@@ -87,7 +87,7 @@ export default function CreateJadwal() {
             {errors.tanggal && <p className="text-sm text-red-500">{errors.tanggal.message}</p>}
           </div>
 
-          {/* WAKTU */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">Waktu Pelaksanaan (Jam)</label>
             <input
@@ -102,7 +102,7 @@ export default function CreateJadwal() {
           </div>
         </div>
 
-        {/* TOMBOL AKSI */}
+        {}
         <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
           <button 
             type="button" 

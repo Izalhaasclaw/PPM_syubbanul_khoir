@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/db.js";
 
-// GET ALL
+
 export const getInformasi = async (req: Request, res: Response) => {
     try {
         const informasi = await prisma.informasi.findMany({
@@ -22,7 +22,7 @@ export const getInformasi = async (req: Request, res: Response) => {
     }
 };
 
-// GET BY ID
+
 export const getInformasiById = async (
     req: Request<{ id: string }>,
     res: Response
@@ -52,7 +52,7 @@ export const getInformasiById = async (
     }
 };
 
-// CREATE
+
 export const createInformasi = async (
     req: Request,
     res: Response
@@ -95,7 +95,7 @@ export const createInformasi = async (
     }
 };
 
-// UPDATE
+
 export const updateInformasiById = async (
     req: Request<{ id: string }>,
     res: Response
@@ -152,7 +152,7 @@ export const updateInformasiById = async (
     }
 };
 
-// DELETE
+
 export const deleteInformasiById = async (
     req: Request<{ id: string }>,
     res: Response

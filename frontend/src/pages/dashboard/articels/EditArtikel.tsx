@@ -7,7 +7,7 @@ import { API } from "../../../lib/axios";
 interface ArtikelForm {
   judul: string;
   isi: string;
-  foto: FileList; // 👈 1. Diubah menjadi FileList untuk memproses file upload
+  foto: FileList; 
 }
 
 export default function EditArtikel() {
@@ -16,7 +16,7 @@ export default function EditArtikel() {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true); 
   const [waktuPembuatan, setWaktuPembuatan] = useState("");
-  const [currentFotoUrl, setCurrentFotoUrl] = useState<string | null>(null); // 👈 2. State untuk menyimpan URL foto lama dari DB
+  const [currentFotoUrl, setCurrentFotoUrl] = useState<string | null>(null); 
 
   const {
     register,
@@ -26,20 +26,20 @@ export default function EditArtikel() {
     formState: { errors },
   } = useForm<ArtikelForm>();
 
-  // Memantau input form secara real-time untuk komponen Live Preview
+  
   const judulPreview = watch("judul");
-  const fotoWatch = watch("foto"); // 👈 3. Pantau input file foto
+  const fotoWatch = watch("foto"); 
   const isiPreview = watch("isi");
 
-  // Logika Pratinjau Gambar: Jika ada file baru gunakan blob lokal, jika tidak gunakan url lama dari database
+  
   const handleImagePreview = () => {
     if (fotoWatch && fotoWatch.length > 0) {
       return URL.createObjectURL(fotoWatch[0]);
     }
-    return currentFotoUrl; // Fallback ke URL gambar mading yang sudah ada
+    return currentFotoUrl; 
   };
 
-  // Fetch data artikel lama berdasarkan ID
+  
   useEffect(() => {
     const fetchDetailArtikel = async () => {
       try {
@@ -49,16 +49,16 @@ export default function EditArtikel() {
         const artikel = responseData.data || responseData.artikel || responseData;
 
         if (artikel) {
-          // 👈 4. Isi data teks ke form. Jangan masukkan string URL foto ke reset() input file.
+          
           reset({
             judul: artikel.judul,
             isi: artikel.isi,
           });
 
-          // Simpan URL gambar lama ke state pendukung
+          
           setCurrentFotoUrl(artikel.foto || null);
 
-          // Simpan tanggal pembuatan asli untuk ditampilkan di preview
+          
           if (artikel.created_at) {
             const dateParsed = new Date(artikel.created_at).toLocaleDateString("id-ID", {
               day: "numeric",
@@ -80,7 +80,7 @@ export default function EditArtikel() {
     if (id) fetchDetailArtikel();
   }, [id, reset, navigate]);
 
-  // 👈 5. Mengubah pengiriman payload JSON menjadi FormData
+  
   const onSubmit = async (data: ArtikelForm) => {
     try {
       setLoading(true);
@@ -89,12 +89,12 @@ export default function EditArtikel() {
       formData.append("judul", data.judul);
       formData.append("isi", data.isi);
 
-      // Hanya lampirkan file foto ke FormData jika user memilih file baru di komputernya
+      
       if (data.foto && data.foto.length > 0) {
         formData.append("foto", data.foto[0]);
       }
 
-      // Kirim pembaruan multipart/form-data menggunakan API.put
+      
       await API.put(`/artikel/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -131,9 +131,9 @@ export default function EditArtikel() {
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 lg:grid-cols-12 gap-8 p-6"
       >
-        {/* KOLOM KIRI: INPUT FORM */}
+        {}
         <div className="lg:col-span-5 space-y-5">
-          {/* JUDUL ARTIKEL */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">
               Judul Artikel
@@ -153,15 +153,15 @@ export default function EditArtikel() {
             )}
           </div>
 
-          {/* GANTI FOTO COVER (OPTIONAL) */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">
               Ganti Foto Cover (Opsional)
             </label>
             <input
-              type="file" // 👈 6. Diubah dari tipe text menjadi file input asli
+              type="file" 
               accept="image/*"
-              {...register("foto")} // Di halaman edit, validasi { required: true } dihapus agar bisa dilewati
+              {...register("foto")} 
               className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
             <p className="text-xs text-gray-400 mt-1">
@@ -169,7 +169,7 @@ export default function EditArtikel() {
             </p>
           </div>
 
-          {/* ISI KONTEN */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">
               Isi Konten Artikel
@@ -193,7 +193,7 @@ export default function EditArtikel() {
           </div>
         </div>
 
-        {/* KOLOM KANAN: LIVE SCROLLABLE PREVIEW */}
+        {}
         <div className="lg:col-span-7 flex flex-col">
           <div className="flex items-center justify-between mb-2">
             <label className="text-sm font-semibold text-gray-700">
@@ -203,7 +203,7 @@ export default function EditArtikel() {
 
           <div className="w-full bg-white rounded-xl border border-gray-200 shadow-sm h-140 overflow-y-auto custom-scrollbar">
             <div className="p-6 lg:p-8 space-y-5">
-              {/* 1. Komponen Judul Utama */}
+              {}
               <h1
                 className={`font-bold text-gray-900 text-2xl lg:text-3xl tracking-tight leading-tight wrap-break-word ${
                   !judulPreview && "text-gray-300 italic font-medium"
@@ -212,14 +212,14 @@ export default function EditArtikel() {
                 {judulPreview || "Lorem Ipsum Dolor sit Amet"}
               </h1>
 
-              {/* 2. Metadata */}
+              {}
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4 text-xs text-gray-400 font-medium">
                 <div>{waktuPembuatan || "Memuat tanggal..."}</div>
               </div>
 
-              {/* 3. Komponen Foto Cover Utama */}
+              {}
               <div className="w-full aspect-video rounded-xl overflow-hidden bg-gray-50 border flex items-center justify-center group relative">
-                {handleImagePreview() ? ( // 👈 7. Memakai fungsi gabungan pratinjau (file baru / foto lama)
+                {handleImagePreview() ? ( 
                   <img
                     src={handleImagePreview()!}
                     alt="Article Cover Preview"
@@ -235,7 +235,7 @@ export default function EditArtikel() {
                 )}
               </div>
 
-              {/* 4. Komponen Isi Berita */}
+              {}
               <div
                 className={`text-gray-700 text-sm md:text-base leading-relaxed wrap-break-word whitespace-pre-line ${
                   !isiPreview && "italic text-gray-300 select-none"
@@ -247,7 +247,7 @@ export default function EditArtikel() {
           </div>
         </div>
 
-        {/* BARIS BUTTON AKSI */}
+        {}
         <div className="lg:col-span-12 flex justify-end gap-3 pt-4 border-t border-gray-100">
           <button
             type="button"

@@ -6,10 +6,10 @@ export default function DashboardLayout() {
   const logout = authStore((state) => state.logout);
   const isAuthenticated = authStore((state) => state.isAuthenticated);
   
-  // 1. Ambil data user dari authStore
+  
   const user = authStore((state) => state.user); 
 
-  // Jika tidak terautentikasi, redirect ke login
+  
   if (!isAuthenticated) {
     return <Navigate to="/login-form" replace />;
   }
@@ -27,10 +27,10 @@ export default function DashboardLayout() {
       <div className="bg-[#0F172A] w-80 flex flex-col justify-between p-8 shadow-2xl">
         <div className="flex flex-col gap-10">
           
-          {/* Area Profil Sidebar */}
+          {}
           <div className="flex flex-col items-center text-center mt-4">
             <Link to="/dashboard">
-              {/* 2. Bingkai Foto/Logo otomatis menyesuaikan ukurannya */}
+              {}
               <div className={`w-28 h-28 flex items-center justify-center mb-4 overflow-hidden ${
                 user?.foto ? "rounded-full border-2 border-[#35A2FD]" : ""
               }`}>
@@ -44,12 +44,12 @@ export default function DashboardLayout() {
               </div>
             </Link>
 
-            {/* Area Teks Dinamis */}
+            {}
             <div className="flex flex-col gap-1">
               <p className="text-sm text-gray-400 font-normal tracking-wide">
                 Syubbanul Khoir
               </p>
-              {/* 3. Menampilkan nama user yang sedang login */}
+              {}
               <h2 className="text-2xl font-bold text-white tracking-wide max-w-60 wrap-break-word">
                 {user?.username || "Username"}
               </h2>
@@ -67,7 +67,7 @@ export default function DashboardLayout() {
                         `block w-full py-2 px-4 text-center text-lg font-medium rounded-xl transition-all shadow-md ${
                           isActive
                             ? "bg-[#35A2FD] text-white hover:bg-[#1D8DF5]" 
-                            : "bg-transparent text-white hover:bg-slate-800" // Perubahan hover text agar kontras tetap terjaga
+                            : "bg-transparent text-white hover:bg-slate-800" 
                         }`
                       }
                     >
@@ -80,7 +80,7 @@ export default function DashboardLayout() {
           </div>
         </div>
 
-        {/* Tombol Logout */}
+        {}
         <div className="mt-auto">
           <button
             type="button"
@@ -92,7 +92,7 @@ export default function DashboardLayout() {
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {}
       <main className="flex-1 p-4 overflow-y-auto">
         <div className="bg-white min-h-full p-8 shadow-smM rounded-xl">
           <Outlet />

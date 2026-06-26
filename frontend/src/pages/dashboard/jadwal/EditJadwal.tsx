@@ -23,11 +23,11 @@ export default function EditJadwal() {
     const fetchCurrentJadwal = async () => {
       try {
         setFetching(true);
-        // Response showJadwalById langsung mengembalikan objek jadwal raw
+        
         const res = await API.get(`/jadwal/${id}`);
         const data = res.data;
 
-        // Memformat ISO Date dari backend ke format string input date standar (YYYY-MM-DD)
+        
         const formattedDate = data.tanggal ? new Date(data.tanggal).toISOString().split("T")[0] : "";
 
         reset({
@@ -52,7 +52,7 @@ export default function EditJadwal() {
     try {
       setLoading(true);
       
-      // Mengirimkan pembaruan ke route PUT /jadwal/:id
+      
       await API.put(`/jadwal/${id}`, data);
 
       alert("Jadwal berhasil diperbarui!");
@@ -77,17 +77,17 @@ export default function EditJadwal() {
 
   return (
     <div className="p-2">
-      {/* HEADER FORM */}
+      {}
       <div className="border-b border-gray-100 p-6">
         <h1 className="text-3xl font-bold text-gray-900">Edit Data Jadwal</h1>
         <p className="text-gray-500 mt-1">Perbarui detail acara, pergeseran waktu, atau pemindahan lokasi agenda kegiatan.</p>
       </div>
 
-      {/* GRID INPUT FORM */}
+      {}
       <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
-          {/* NAMA ACARA */}
+          {}
           <div className="flex flex-col gap-2 md:col-span-2">
             <label className="text-sm font-semibold text-gray-700">Nama Acara / Kegiatan</label>
             <input
@@ -101,7 +101,7 @@ export default function EditJadwal() {
             {errors.acara && <p className="text-sm text-red-500">{errors.acara.message}</p>}
           </div>
 
-          {/* LOKASI */}
+          {}
           <div className="flex flex-col gap-2 md:col-span-2">
             <label className="text-sm font-semibold text-gray-700">Lokasi Pelaksanaan</label>
             <input
@@ -115,7 +115,7 @@ export default function EditJadwal() {
             {errors.lokasi && <p className="text-sm text-red-500">{errors.lokasi.message}</p>}
           </div>
 
-          {/* TANGGAL */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">Tanggal Acara</label>
             <input
@@ -128,7 +128,7 @@ export default function EditJadwal() {
             {errors.tanggal && <p className="text-sm text-red-500">{errors.tanggal.message}</p>}
           </div>
 
-          {/* WAKTU */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">Waktu Pelaksanaan (Jam)</label>
             <input
@@ -143,7 +143,7 @@ export default function EditJadwal() {
           </div>
         </div>
 
-        {/* TOMBOL AKSI */}
+        {}
         <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
           <button 
             type="button" 
