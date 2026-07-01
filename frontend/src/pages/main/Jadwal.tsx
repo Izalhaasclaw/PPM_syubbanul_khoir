@@ -5,23 +5,40 @@ import { API } from "../../lib/axios";
 
 export default function Jadwal() {
   const [daftarJadwal, setDaftarJadwal] = useState<JadwalProps[]>([]);
-  
-  const [isLoading] = useState(true);
-  const [error] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Simulasi pemanggilan API/Database
   useEffect(() => {
     const fetchDatabase = async () => {
       try {
-              const res = await API.get("/jadwal-index");
-              const result = res.data;
-              const data = Array.isArray(result.data) ? result.data : result;
-      
-              setDaftarJadwal(data);
-            } catch (error) {
-              console.error("Gagal mengambil data jadwal:", error);
-            }
-          };
+        setError(null); 
+        
+        const res = await API.get("/jadwal-index");
+        const result = res.data;
+        const data = Array.isArray(result.data) ? result.data : result;
+  
+        // ================= LOGIKA FILTER TANGGAL =================
+        // 1. Ambil tanggal hari ini dan reset jamnya ke 00:00:00
+        const hariIni = new Date();
+        hariIni.setHours(0, 0, 0, 0);
+
+        // 2. Filter hanya acara yang tanggalnya hari ini atau besok-besoknya
+        const jadwalMendatang = data.filter((jadwal: JadwalProps) => {
+          const tanggalAcara = new Date(jadwal.tanggal);
+          tanggalAcara.setHours(0, 0, 0, 0); // Reset jam acara agar perbandingan tanggal adil
+          
+          return tanggalAcara >= hariIni; // Hanya lolos jika hari ini atau yang akan datang
+        });
+        // =========================================================
+
+        setDaftarJadwal(jadwalMendatang);
+      } catch (err: any) {
+        console.error("Gagal mengambil data jadwal:", err);
+        setError(err.message || "Gagal mengambil data jadwal");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
     fetchDatabase();
   }, []);
@@ -85,7 +102,7 @@ export default function Jadwal() {
             </div>
           )}
 
-          {/* 4. Tampilkan Pesan jika Database Kosong */}
+          {/* 4. Tampilkan Pesan jika Database Kosong atau Semua Jadwal Sudah Lewat */}
           {!isLoading && !error && daftarJadwal.length === 0 && (
             <div className="w-full py-20 text-center text-gray-500 font-medium">
               Belum ada jadwal acara mendatang.

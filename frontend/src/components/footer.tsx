@@ -3,7 +3,7 @@ import { API } from "../lib/axios"; // 👈 Sesuaikan dengan path Axios instance
 
 interface Informasi {
   alamat: string;
-  whatsapp: string;
+  telepon: string;
   email: string;
   instagram: string;
   tiktok: string;
@@ -14,7 +14,7 @@ export function Footer() {
   // Data fallback (cadangan) jika database kosong / gagal dimuat
   const [info, setInfo] = useState<Informasi>({
     alamat: "Jl. Perumahan Mutiara Vantavin No.1, Pacul Kulon, Pacul, Kec. Talang, Kab. Tegal, Jawa Tengah 52193",
-    whatsapp: "+62 877-2211-2002",
+    telepon: "+62 877-2211-2002",
     email: "syukhoir@gmail.com",
     instagram: "#",
     tiktok: "#",
@@ -34,7 +34,7 @@ export function Footer() {
         if (finalData) {
           setInfo({
             alamat: finalData.alamat || info.alamat,
-            whatsapp: finalData.whatsapp || info.whatsapp,
+            telepon: finalData.telepon || info.telepon,
             email: finalData.email || info.email,
             instagram: finalData.instagram || "#",
             tiktok: finalData.tiktok || "#",
@@ -49,7 +49,7 @@ export function Footer() {
     fetchFooterInfo();
   }, []);
 
-  // Membersihkan nomor WhatsApp agar aman saat di-redirect ke https://wa.me/
+  // Membersihkan nomor telepon agar aman saat di-redirect ke https://wa.me/
   const formatWAUrl = (num: string) => {
     const cleanNum = num.replace(/[^0-9]/g, "");
     if (cleanNum.startsWith("0")) {
@@ -85,14 +85,14 @@ export function Footer() {
               Contact Person
             </h3>
             <p className="flex items-center gap-1">
-              WhatsApp:{" "}
+              telepon:{" "}
               <a 
-                href={`https://wa.me/${formatWAUrl(info.whatsapp)}`} 
+                href={`https://wa.me/${formatWAUrl(info.telepon)}`} 
                 target="_blank" 
                 rel="noreferrer"
                 className="underline hover:text-white transition-colors"
               >
-                {info.whatsapp}
+                {info.telepon}
               </a>
             </p>
             <p className="flex items-center gap-1 mt-2">
