@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
     },
     {
       label: "Jadwal",
-      href: "/Talkshow",
+      href: "/Jadwal",
       icon: (
         <svg
           width="21"
