@@ -1,18 +1,47 @@
 import { Outlet } from "react-router-dom";
+
 export default function AuthLayout() {
+  const bgImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWipLyc4xy0_uUx0rjBydHjGVwVJo7QElbiagr0sA-e7ZZoRFx6jzeBQ0i&s=10";
+
   return (
-    <div className="grid grid-cols-2 items-center min-h-screen">
-      <div className="bg-gray-50 h-screen flex flex-col items-center justify-center">
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWipLyc4xy0_uUx0rjBydHjGVwVJo7QElbiagr0sA-e7ZZoRFx6jzeBQ0i&s=10"
-          alt=""
-          className="h-full object-cover"
-        />
+    <div className="min-h-screen w-full">
+      
+      {/* TAMPILAN MOBILE & TABLET */}
+      <div 
+        className="lg:hidden min-h-screen bg-cover bg-center flex items-center justify-center p-4 relative"
+        style={{ backgroundImage: `url(${bgImage})` }}
+      >
+        {/* Overlay gelap tipis */}
+        <div className="absolute inset-0 bg-black/50 z-0" />
+
+        {/* CARD UTAMA (PUTIH BERSIH) */}
+        <div className="relative z-10 w-full max-w-sm bg-white rounded-2xl shadow-2xl p-6 sm:p-8">
+          <Outlet />
+        </div>
       </div>
 
-      <div>
-        <Outlet />
+
+      {/* TAMPILAN DESKTOP / PC (>= lg) */}
+      <div className="hidden lg:grid grid-cols-2 min-h-screen bg-white">
+        
+        {/* Kolom Kiri: Gambar Full Screen */}
+        <div className="bg-gray-50 h-screen flex flex-col items-center justify-center overflow-hidden">
+          <img
+            src={bgImage}
+            alt="Syubbanul Khoir Banner"
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        {/* Kolom Kanan: Area Form Login Bersih */}
+        <div className="flex items-center justify-center h-full p-8">
+          <div className="w-full max-w-md">
+            <Outlet />
+          </div>
+        </div>
+
       </div>
+
     </div>
   );
 }

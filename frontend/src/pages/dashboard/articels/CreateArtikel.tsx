@@ -7,7 +7,7 @@ import { API } from "../../../lib/axios";
 interface ArtikelForm {
   judul: string;
   isi: string;
-  foto: FileList; // 👈 1. Diubah dari string menjadi FileList untuk menangani file asli
+  foto: FileList; 
 }
 
 export default function CreateArtikel() {
@@ -21,20 +21,20 @@ export default function CreateArtikel() {
     formState: { errors },
   } = useForm<ArtikelForm>();
 
-  // Memantau input form secara real-time
+  
   const judulPreview = watch("judul");
-  const fotoWatch = watch("foto"); // 👈 2. Pantau properti file foto
+  const fotoWatch = watch("foto"); 
   const isiPreview = watch("isi");
 
-  // Logika konversi file gambar lokal untuk kebutuhan Live Preview
+  
   const handleImagePreview = () => {
     if (fotoWatch && fotoWatch.length > 0) {
-      return URL.createObjectURL(fotoWatch[0]); // Membuat string URL temporary dari file lokal
+      return URL.createObjectURL(fotoWatch[0]); 
     }
     return null;
   };
 
-  // 👈 3. Mengubah pengiriman JSON biasa menjadi FormData
+  
   const onSubmit = async (data: ArtikelForm) => {
     try {
       setLoading(true);
@@ -43,20 +43,20 @@ export default function CreateArtikel() {
       formData.append("judul", data.judul);
       formData.append("isi", data.isi);
       
-      // Ambil file pertama dari elemen input file mading jika tersedia
+      
       if (data.foto && data.foto.length > 0) {
-        formData.append("foto", data.foto[0]); // Key "foto" harus sinkron dengan upload.single("foto") di backend
+        formData.append("foto", data.foto[0]); 
       }
 
-      // Mengirim multipart/form-data menggunakan instance Axios
-      await API.post("/artikel", formData, {
+      
+      await API.post("/artikel-index", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       alert("Artikel berhasil diterbitkan!");
-      navigate("/artikel");
+      navigate("/artikel-index");
     } catch (error: any) {
       console.error(error);
       const errorMessage = error.response?.data?.message || "Gagal menerbitkan artikel";
@@ -66,7 +66,7 @@ export default function CreateArtikel() {
     }
   };
 
-  // Format tanggal + waktu presisi untuk simulasi mading/berita nasional
+  
   const waktuSekarang =
     new Date().toLocaleDateString("id-ID", {
       day: "numeric",
@@ -84,9 +84,9 @@ export default function CreateArtikel() {
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 lg:grid-cols-12 gap-8 p-6"
       >
-        {/* KOLOM KIRI: INPUT FORM */}
+        {}
         <div className="lg:col-span-5 space-y-5">
-          {/* JUDUL ARTIKEL */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">
               Judul Artikel
@@ -106,14 +106,14 @@ export default function CreateArtikel() {
             )}
           </div>
 
-          {/* UNGGAH FILE FOTO COVÈR */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">
               File Foto Cover
             </label>
             <input
-              type="file" // 👈 4. Mengubah tipe teks (link) menjadi input file asli
-              accept="image/*" // Membatasi agar pengguna hanya bisa memilih file gambar
+              type="file" 
+              accept="image/*" 
               {...register("foto", { required: "Foto cover mading wajib diunggah" })}
               className={`w-full border rounded-xl px-4 py-2.5 text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 ${
                 errors.foto ? "border-red-500" : "border-gray-200"
@@ -124,7 +124,7 @@ export default function CreateArtikel() {
             )}
           </div>
 
-          {/* ISI KONTEN */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">
               Isi Konten Artikel
@@ -148,7 +148,7 @@ export default function CreateArtikel() {
           </div>
         </div>
 
-        {/* KOLOM KANAN: LIVE SCROLLABLE PREVIEW */}
+        {}
         <div className="lg:col-span-7 flex flex-col">
           <div className="flex items-center justify-between mb-2">
             <label className="text-sm font-semibold text-gray-700">
@@ -158,7 +158,7 @@ export default function CreateArtikel() {
 
           <div className="w-full bg-white rounded-xl border border-gray-200 shadow-sm h-140 overflow-y-auto custom-scrollbar">
             <div className="p-6 lg:p-8 space-y-5">
-              {/* 1. Komponen Judul Utama */}
+              {}
               <h1
                 className={`font-bold text-gray-900 text-2xl lg:text-3xl tracking-tight leading-tight wrap-break-word ${
                   !judulPreview && "text-gray-300 italic font-medium"
@@ -167,16 +167,16 @@ export default function CreateArtikel() {
                 {judulPreview || "Lorem Ipsum Dolor sit Amet"}
               </h1>
 
-              {/* 2. Metadata */}
+              {}
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4 text-xs text-gray-400 font-medium">
                 <div>{waktuSekarang}</div>
               </div>
 
-              {/* 3. Komponen Foto Cover Utama (Live Object Preview) */}
+              {}
               <div className="w-full aspect-video rounded-xl overflow-hidden bg-gray-50 border flex items-center justify-center group relative">
                 {fotoWatch && fotoWatch.length > 0 ? (
                   <img
-                    src={handleImagePreview() || ""} // 👈 5. Menggunakan URL blob lokal hasil upload file
+                    src={handleImagePreview() || ""} 
                     alt="Article Cover Preview"
                     className="w-full h-full object-cover"
                   />
@@ -190,7 +190,7 @@ export default function CreateArtikel() {
                 )}
               </div>
 
-              {/* 4. Komponen Isi Berita */}
+              {}
               <div
                 className={`text-gray-700 text-sm md:text-base leading-relaxed wrap-break-word whitespace-pre-line ${
                   !isiPreview && "italic text-gray-300 select-none"
@@ -202,11 +202,11 @@ export default function CreateArtikel() {
           </div>
         </div>
 
-        {/* BARIS BUTTON AKSI */}
+        {}
         <div className="lg:col-span-12 flex justify-end gap-3 pt-4 border-t border-gray-100">
           <button
             type="button"
-            onClick={() => navigate("/artikel")}
+            onClick={() => navigate("/artikel-index")}
             className="px-5 py-2.5 rounded-xl border border-gray-300 text-sm font-medium hover:bg-gray-50 transition-colors"
           >
             Batal

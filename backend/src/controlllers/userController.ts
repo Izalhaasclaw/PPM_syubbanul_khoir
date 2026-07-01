@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/db.js";
 import bcrypt from "bcrypt";
-import { put, del } from "@vercel/blob"; // 👈 1. Import fungsi put dan del dari Vercel Blob
+import { put, del } from "@vercel/blob"; 
 
-// Menampilkan semua User
+
 export const getUser = async (req: Request, res: Response) => {
     try {
         const allUser = await prisma.user.findMany({
@@ -25,19 +25,19 @@ export const getUser = async (req: Request, res: Response) => {
     }
 };
 
-// Menyimpan data user (Register / Tambah User Baru)
+
 export const saveUser = async (req: Request, res: Response) => {
     try {
         const { name, username, password } = req.body;
         
-        // 👈 2. Validasi file foto harus ada lewat req.file (bukan req.body lagi)
+        
         if (!name || !password || !req.file) {
             return res.status(400).json({
                 message: "Nama, password, dan foto profil wajib diisi!",
             });
         }
 
-        // 👈 3. Unggah file foto profil ke Vercel Blob (Public Store)
+        
         const blob = await put(`avatars/${Date.now()}-${req.file.originalname}`, req.file.buffer, {
             access: "public",
         });
@@ -49,7 +49,7 @@ export const saveUser = async (req: Request, res: Response) => {
                 name,
                 username,
                 password: hashedPassword,
-                foto: blob.url, // 👈 4. Simpan URL publik hasil upload blob ke database
+                foto: blob.url, 
             },
         });
 
@@ -71,7 +71,7 @@ export const saveUser = async (req: Request, res: Response) => {
     }
 };   
 
-// Menampilkan data User berdasarkan id
+
 export const showUserById = async (req: Request<{ id: string }>, res: Response) => {
     try {
         const id = Number(req.params.id);
@@ -92,7 +92,7 @@ export const showUserById = async (req: Request<{ id: string }>, res: Response) 
     }
 };
 
-// Mengupdate user berdasarkan id
+
 export const updateUserById = async (req: Request<{ id: string }>, res: Response) => {
    try {
         const id = Number(req.params.id);
@@ -107,11 +107,11 @@ export const updateUserById = async (req: Request<{ id: string }>, res: Response
         }
 
         const { name, username, password } = req.body;
-        let fotoUrl = existingUser.foto; // Default gunakan foto lama
+        let fotoUrl = existingUser.foto; 
 
-        // 👈 5. Jika user mengunggah berkas foto baru
+        
         if (req.file) {
-            // Hapus foto lama dari Vercel Blob agar storage tidak penuh (jika ada)
+            
             if (existingUser.foto && existingUser.foto.includes("public.blob.vercel-storage.com")) {
                 try {
                     await del(existingUser.foto);
@@ -120,7 +120,7 @@ export const updateUserById = async (req: Request<{ id: string }>, res: Response
                 }
             }
 
-            // Unggah file foto baru
+            
             const blob = await put(`avatars/${Date.now()}-${req.file.originalname}`, req.file.buffer, {
                 access: "public",
             });
@@ -135,7 +135,7 @@ export const updateUserById = async (req: Request<{ id: string }>, res: Response
                 name: name ?? existingUser.name,
                 username: username ?? existingUser.username,
                 password: hashedPassword ?? existingUser.password,
-                foto: fotoUrl, // Menggunakan foto baru atau mempertahankan yang lama
+                foto: fotoUrl, 
                 updatedAt: new Date(),
             },
         });
@@ -157,7 +157,7 @@ export const updateUserById = async (req: Request<{ id: string }>, res: Response
     }
 };
 
-// Menghapus user berdasarkan id
+
 export const deleteUserById = async (req: Request<{ id: string }>, res: Response) => {
     try {
         const id = Number(req.params.id);
@@ -171,7 +171,7 @@ export const deleteUserById = async (req: Request<{ id: string }>, res: Response
             });
         }
 
-        // 👈 6. Hapus foto user dari Vercel Blob sebelum menghapus data dari database
+        
         if (existingUser.foto && existingUser.foto.includes("public.blob.vercel-storage.com")) {
             try {
                 await del(existingUser.foto);

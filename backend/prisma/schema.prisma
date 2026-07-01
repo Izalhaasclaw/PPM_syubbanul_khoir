@@ -43,12 +43,13 @@ model Artikel {
 
 model Informasi {
   id        Int      @id @default(autoincrement())
-  telpon    String
   alamat    String
   instagram String
   tiktok    String
   youtube   String?
   createdAt DateTime @default(now()) @map("created_at")
+  email     String   @default("syukhoir@gmail.com")
+  telepon   String   @default("083899216097")
 
   @@map("informasi")
 }

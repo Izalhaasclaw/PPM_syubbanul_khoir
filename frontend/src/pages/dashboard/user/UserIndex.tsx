@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { API } from "../../../lib/axios"; // 👈 Hubungkan ke instance Axios kamu
+import { API } from "../../../lib/axios"; 
 import {
   Plus,
   Edit,
@@ -35,7 +35,7 @@ export default function UserIndex() {
     }));
   };
 
-  // 👈 Menggunakan API.get("/users")
+  
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -57,7 +57,7 @@ export default function UserIndex() {
     }
   };
 
-  // 👈 Menggunakan API.delete(`/users/${id}`)
+  
   const handleDelete = async (id: number, name: string) => {
     const confirmDelete = window.confirm(
       `Apakah kamu yakin ingin menghapus user "${name}"?`,
@@ -199,7 +199,7 @@ export default function UserIndex() {
                 </button>
                 <button
                   disabled={currentPage === totalPages || totalPages === 0}
-                  onClick={() => setCurrentPage((p) => p + 1)} // Perbaikan: Tombol Next sekarang bernilai + 1
+                  onClick={() => setCurrentPage((p) => p + 1)} 
                   className="p-2 border rounded-lg disabled:opacity-50"
                 >
                   <ChevronRight size={20} />

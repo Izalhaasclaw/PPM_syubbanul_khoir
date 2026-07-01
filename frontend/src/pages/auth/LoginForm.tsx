@@ -1,14 +1,14 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Input } from "../components/ui/InputText";
-import { InputPassword } from "../components/ui/InputPassword";
-import { Button } from "../components/ui/Button";
+import { Input } from "../../components/ui/InputText";
+import { InputPassword } from "../../components/ui/InputPassword";
+import { Button } from "../../components/ui/Button";
 import { useNavigate } from "react-router-dom";
-import { authStore } from "../store/AuthStore";
+import { authStore } from "../../store/AuthStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { LoginRequest, LoginResponse } from "../types/Auth";
-import { API } from "../lib/axios";
+import type { LoginRequest, LoginResponse } from "../../types/Auth";
+import { API } from "../../lib/axios";
 import type { AxiosError } from "axios";
 
 type FormData = {
@@ -79,7 +79,7 @@ export default function LoginForm() {
           name="password"
           error={errors.password?.message}
         />
-        <Button type="submit" label="Login" />
+        <Button type="submit" label="Login" variant="primary" />
       </form>
     </div>
   );

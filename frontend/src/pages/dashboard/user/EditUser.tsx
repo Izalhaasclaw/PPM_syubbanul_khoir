@@ -9,7 +9,7 @@ interface UserForm {
   name: string;
   username: string;
   password?: string;
-  foto: FileList; // 👈 1. Diubah menjadi FileList
+  foto: FileList; 
 }
 
 export default function EditUser() {
@@ -18,7 +18,7 @@ export default function EditUser() {
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [currentFotoUrl, setCurrentFotoUrl] = useState<string | null>(null); // 👈 2. State untuk menyimpan URL foto lama dari database
+  const [currentFotoUrl, setCurrentFotoUrl] = useState<string | null>(null); 
 
   const {
     register,
@@ -28,14 +28,14 @@ export default function EditUser() {
     formState: { errors },
   } = useForm<UserForm>();
 
-  const fotoWatch = watch("foto"); // 👈 3. Pantau input file foto
+  const fotoWatch = watch("foto"); 
 
-  // Logika Pratinjau Gambar: Jika ada file baru gunakan blob lokal, jika tidak gunakan url dari database
+  
   const handleImagePreview = () => {
     if (fotoWatch && fotoWatch.length > 0) {
       return URL.createObjectURL(fotoWatch[0]);
     }
-    return currentFotoUrl; // Fallback ke URL avatar user yang sudah ada
+    return currentFotoUrl; 
   };
 
   useEffect(() => {
@@ -46,14 +46,14 @@ export default function EditUser() {
         const result = res.data;
         const data = result.data || result.user || result;
 
-        // 👈 4. Hanya isi data teks ke form reset. String URL tidak boleh di-reset ke input file.
+        
         reset({
           name: data.name || "",
           username: data.username || "",
           password: "", 
         });
 
-        // Simpan URL foto saat ini ke state pendukung
+        
         setCurrentFotoUrl(data.foto || null);
       } catch (error) {
         console.error(error);
@@ -66,7 +66,7 @@ export default function EditUser() {
     if (id) fetchUser();
   }, [id, reset, navigate]);
 
-  // 👈 5. Mengubah pengiriman payload JSON menjadi FormData
+  
   const onSubmit = async (data: UserForm) => {
     try {
       setLoading(true);
@@ -75,17 +75,17 @@ export default function EditUser() {
       formData.append("name", data.name);
       formData.append("username", data.username);
 
-      // Hanya kirim password jika diisi oleh user
+      
       if (data.password && data.password.trim() !== "") {
         formData.append("password", data.password);
       }
 
-      // Hanya lampirkan file foto baru jika user memilih berkas baru di komputernya
+      
       if (data.foto && data.foto.length > 0) {
         formData.append("foto", data.foto[0]);
       }
 
-      // Kirim data update menggunakan multipart/form-data
+      
       await API.put(`/users/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -94,7 +94,7 @@ export default function EditUser() {
 
       alert("User berhasil diupdate!");
 
-      // Cek apakah user yang diedit adalah akun yang sedang digunakan login
+      
       const loggedInUser = authStore.getState().user; 
       
       if (loggedInUser && String(loggedInUser.id) === String(id)) {
@@ -134,7 +134,7 @@ export default function EditUser() {
         className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6"
       >
         <div className="space-y-5">
-          {/* NAMA */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">
               Nama Lengkap
@@ -153,7 +153,7 @@ export default function EditUser() {
             )}
           </div>
 
-          {/* USERNAME */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">
               Username
@@ -172,7 +172,7 @@ export default function EditUser() {
             )}
           </div>
 
-          {/* PASSWORD */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">
               Password
@@ -204,15 +204,15 @@ export default function EditUser() {
             )}
           </div>
 
-          {/* GANTI FOTO PROFIL (OPTIONAL) */}
+          {}
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-gray-700">
               Ganti Foto Profil (Opsional)
             </label>
             <input
-              type="file" // 👈 6. Diubah dari tipe text menjadi file input asli
+              type="file" 
               accept="image/*"
-              {...register("foto")} // Dikosongkan validasi required agar opsional saat edit
+              {...register("foto")} 
               className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
             <p className="text-xs text-gray-400 mt-1">
@@ -221,13 +221,13 @@ export default function EditUser() {
           </div>
         </div>
 
-        {/* PREVIEW FOTO */}
+        {}
         <div className="flex flex-col items-center">
           <label className="text-sm font-semibold text-gray-700 mb-2">
             Preview Image
           </label>
           <div className="w-4/5 aspect-square border border-dashed border-gray-300 rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center">
-            {handleImagePreview() ? ( // 👈 7. Menggunakan fungsi gabungan pratinjau (file baru / foto DB lama)
+            {handleImagePreview() ? ( 
               <img
                 src={handleImagePreview()!}
                 alt="Preview"
@@ -244,7 +244,7 @@ export default function EditUser() {
           </div>
         </div>
 
-        {/* ACTIONS */}
+        {}
         <div className="lg:col-span-2 flex justify-end gap-3 pt-4 border-t border-gray-100">
           <button
             type="button"

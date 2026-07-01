@@ -23,7 +23,7 @@ API.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Handle 401 Unauthorized error
+      
       authStore.getState().logout();
 
       window.dispatchEvent(new Event("auth:unauthorized"));

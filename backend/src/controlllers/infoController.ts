@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/db.js";
 
-// GET ALL
+
 export const getInformasi = async (req: Request, res: Response) => {
     try {
         const informasi = await prisma.informasi.findMany({
@@ -22,7 +22,7 @@ export const getInformasi = async (req: Request, res: Response) => {
     }
 };
 
-// GET BY ID
+
 export const getInformasiById = async (
     req: Request<{ id: string }>,
     res: Response
@@ -52,21 +52,22 @@ export const getInformasiById = async (
     }
 };
 
-// CREATE
+
 export const createInformasi = async (
     req: Request,
     res: Response
 ) => {
     try {
         const {
-            telpon,
+            telepon,
             alamat,
+            email,
             instagram,
             tiktok,
             youtube,
         } = req.body;
 
-        if (!telpon || !alamat || !instagram || !tiktok) {
+        if (!telepon || !email || !alamat || !instagram || !tiktok) {
             return res.status(400).json({
                 message:
                     "Telpon, alamat, instagram, dan tiktok wajib diisi",
@@ -75,8 +76,9 @@ export const createInformasi = async (
 
         const newInformasi = await prisma.informasi.create({
             data: {
-                telpon,
+                telepon,
                 alamat,
+                email,
                 instagram,
                 tiktok,
                 youtube,
@@ -95,7 +97,7 @@ export const createInformasi = async (
     }
 };
 
-// UPDATE
+
 export const updateInformasiById = async (
     req: Request<{ id: string }>,
     res: Response
@@ -115,9 +117,10 @@ export const updateInformasiById = async (
         }
 
         const {
-            telpon,
+            telepon,
             alamat,
             instagram,
+            email,
             tiktok,
             youtube,
         } = req.body;
@@ -126,8 +129,10 @@ export const updateInformasiById = async (
             await prisma.informasi.update({
                 where: { id },
                 data: {
-                    telpon:
-                        telpon ?? existingInformasi.telpon,
+                    telepon:
+                        telepon ?? existingInformasi.telepon,
+                    email:
+                        email ?? existingInformasi.email,
                     alamat:
                         alamat ?? existingInformasi.alamat,
                     instagram:
@@ -152,7 +157,7 @@ export const updateInformasiById = async (
     }
 };
 
-// DELETE
+
 export const deleteInformasiById = async (
     req: Request<{ id: string }>,
     res: Response

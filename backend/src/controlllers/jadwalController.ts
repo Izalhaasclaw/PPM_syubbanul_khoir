@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/db.js";
 
-// Menampilkan semua jadwal
+
 export const getJadwal = async (req: Request, res: Response) => {
 try {
 const allJadwal = await prisma.jadwal.findMany({
@@ -24,7 +24,7 @@ tanggal: "asc",
 
 };
 
-// Menyimpan jadwal
+
 export const saveJadwal = async (req: Request, res: Response) => {
 try {
     const { acara, lokasi, tanggal, waktu, } = req.body;
@@ -59,7 +59,7 @@ try {
 
 };
 
-// Menampilkan jadwal berdasarkan ID
+
 export const showJadwalById = async (
     req: Request<{ id: string }>,
     res: Response
@@ -90,7 +90,7 @@ try {
 
 };
 
-// Update jadwal
+
 export const updateJadwalById = async (
 req: Request<{ id: string }>,
 res: Response
@@ -134,7 +134,7 @@ const id = Number(req.params.id);
 
 };
 
-// Hapus jadwal
+
 export const deleteJadwalById = async (
 req: Request<{ id: string }>,
 res: Response
