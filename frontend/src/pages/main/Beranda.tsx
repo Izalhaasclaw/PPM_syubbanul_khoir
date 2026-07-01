@@ -53,7 +53,7 @@ export default function Beranda() {
       }
     };
 
-    // Ambil Data Jadwal untuk Fakta Angka
+    // Ambil Data Jadwal untuk Fakta Angka (Diubah ke /jadwal demi menghindari 404)
     const fetchJadwalCount = async () => {
       try {
         const res = await API.get("/jadwal-index");
@@ -106,15 +106,15 @@ export default function Beranda() {
     <div className="w-full min-h-screen bg-white">
       {/* ================= HERO SECTION ================= */}
       <section
-        className="relative w-full min-h-screen bg-cover bg-center flex items-center justify-center"
+        className="relative w-full h-[85vh] md:h-screen bg-cover bg-center flex items-center justify-center"
         style={{ backgroundImage: `url(${BgImage})` }}
       >
         <div className="absolute inset-0 bg-black/50"></div>
-        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto mt-16">
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-wide">
+        <div className="relative z-10 text-center px-4 md:px-6 max-w-4xl mx-auto mt-12 md:mt-16">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-wide leading-tight">
             Nasyurul Khair Wal Barakah
           </h1>
-          <p className="text-gray-200 text-sm md:text-base leading-relaxed mb-8">
+          <p className="text-gray-200 text-xs sm:text-sm md:text-base leading-relaxed mb-8 max-w-2xl mx-auto">
             Menyiarkan kebaikan dan membawa keberkahan di tengah masyarakat
             melalui lantunan sholawat yang menyejukkan hati.
           </p>
@@ -122,7 +122,7 @@ export default function Beranda() {
       </section>
 
       {/* BUTTON FLOATING (Bawah Kanan) */}
-      <div className="fixed bottom-0 right-10 z-50 flex justify-center mb-4">
+      <div className="fixed bottom-6 right-4 sm:right-10 z-50 flex justify-center shadow-xl rounded-full overflow-hidden">
         <a 
           href={`https://wa.me/${formatWAUrl(noTelepon)}`}
           target="_blank"
@@ -133,35 +133,35 @@ export default function Beranda() {
       </div>
 
       {/* ================= ARTIKEL DAN BERITA ================= */}
-      <section className="py-16 w-full mx-auto overflow-hidden">
-        <h2 className="text-2xl md:text-3xl font-bold text-[#0F172A] mb-8 px-6 md:px-12">
+      <section className="py-12 md:py-16 w-full mx-auto overflow-hidden">
+        <h2 className="text-xl md:text-3xl font-bold text-[#0F172A] mb-6 md:mb-8 px-4 md:px-12">
           Artikel dan Berita
         </h2>
 
         <div
           ref={scrollContainerRef}
-          className="w-full overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory px-4 md:px-12"
+          className="w-full overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory px-4 md:px-12"
           onMouseEnter={() => { isHovered.current = true; }}
           onMouseLeave={() => { isHovered.current = false; }}
         >
-          <div className="flex w-max gap-6 mx-auto justify-start py-4">
+          {/* Lebar item disesuaikan (w-[290px] sm:w-[380px] md:w-[450px]) agar tidak pecah/meluap di mobile */}
+          <div className="flex w-max gap-4 md:gap-6 py-2">
             {daftarArtikel.map((artikel) => (
               <div
                 key={artikel.id}
-                className="w-75 sm:w-112.5 md:w-150 h-50 sm:h-70 md:h-87.5 shrink-0 snap-center rounded-2xl overflow-hidden shadow-lg"
+                className="w-70 sm:w-90 md:w-105 aspect-4/3 shrink-0 snap-center rounded-2xl overflow-hidden shadow-md"
               >
                 <CardArtikel
                   title={artikel.judul}
                   imageUrl={artikel.foto}
                   link={`/artikel/${artikel.id}`}
-                  category="Berita"
                 />
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-5 flex justify-center">
+        <div className="mt-4 flex justify-center px-4">
           <Button
             label="→ Baca Artikel Lainnya"
             variant="primary"
@@ -172,38 +172,37 @@ export default function Beranda() {
 
       {/* ================= STATISTIK (FAKTA ANGKA) ================= */}
       <section
-        className="relative w-full py-20 bg-white overflow-hidden flex flex-col items-center justify-center bg-no-repeat"
+        className="relative w-full py-12 md:py-20 bg-white overflow-hidden flex flex-col items-center justify-center bg-no-repeat"
         style={{
           backgroundImage: `url(${BgAngka})`,
-          backgroundSize: "100% auto",
-          backgroundPosition: "center 90%",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#0F172A] mb-2">
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 md:px-6 text-center">
+          <h2 className="text-xl md:text-3xl font-bold text-[#0F172A] mb-2 px-2">
             Hadroh Syubbanul Khoir dalam Angka
           </h2>
-          <p className="text-gray-500 text-sm md:text-base mb-16">
+          <p className="text-gray-500 text-xs md:text-base mb-10 md:mb-16">
             Fakta dan Angka Hadroh Syubbanul Khoir
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-14 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12 max-w-5xl mx-auto">
             
             {/* Card Stat 1 - Tahun Berdiri */}
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-10 flex flex-col items-center">
-              <div className="bg-[#0f172a] text-white w-20 h-20 rounded-full flex items-center justify-center mb-6">
-                <Calendar size={36} strokeWidth={2} />
+            <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 md:p-10 flex flex-col items-center transition-transform hover:-translate-y-1">
+              <div className="bg-[#0f172a] text-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4 md:mb-6 shrink-0">
+                <Calendar className="w-8 h-8 md:w-9 md:h-9" strokeWidth={2} />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">2017</h3>
-              <p className="text-sm font-semibold text-gray-700">Berdiri Sejak</p>
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">2017</h3>
+              <p className="text-xs md:text-sm font-semibold text-gray-500">Berdiri Sejak</p>
             </div>
 
-            {/* Card Stat 2 - Acara yang Diikuti (Ikon Kustom Rebana/Tambourine) 👈 Perubahan disini */}
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-10 flex flex-col items-center">
-              <div className="bg-[#0f172a] text-white w-20 h-20 rounded-full flex items-center justify-center mb-6">
+            {/* Card Stat 2 - Acara yang Diikuti */}
+            <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 md:p-10 flex flex-col items-center transition-transform hover:-translate-y-1">
+              <div className="bg-[#0f172a] text-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4 md:mb-6 shrink-0">
                 <svg 
-                  width="40" 
-                  height="40" 
+                  className="w-8 h-8 md:w-10 md:h-10"
                   viewBox="0 0 24 24" 
                   fill="none" 
                   stroke="currentColor" 
@@ -211,11 +210,8 @@ export default function Beranda() {
                   strokeLinecap="round" 
                   strokeLinejoin="round"
                 >
-                  {/* Lingkaran Luar Bingkai Rebana */}
                   <circle cx="12" cy="12" r="9" />
-                  {/* Garis Kulit Rebana Bagian Dalam */}
                   <circle cx="12" cy="12" r="7.5" strokeDasharray="3 2" opacity="0.6" />
-                  {/* Kencer / Simbal Logam Kecil di Sisi Kiri, Kanan, Atas, Bawah */}
                   <path d="M12 2.5v1M12 20.5v1M2.5 12h1M20.5 12h1" strokeWidth="2.5" />
                   <circle cx="12" cy="3" r="0.75" fill="currentColor" />
                   <circle cx="12" cy="21" r="0.75" fill="currentColor" />
@@ -223,17 +219,17 @@ export default function Beranda() {
                   <circle cx="21" cy="12" r="0.75" fill="currentColor" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-[#0F172A] mb-1">{totalAcara}</h3>
-              <p className="text-sm font-semibold text-gray-700">Acara yang Diikuti</p>
+              <h3 className="text-xl md:text-2xl font-bold text-[#0F172A] mb-1">{totalAcara}</h3>
+              <p className="text-xs md:text-sm font-semibold text-gray-500">Acara yang Diikuti</p>
             </div>
 
             {/* Card Stat 3 - Kepuasan Pelanggan */}
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-10 flex flex-col items-center">
-              <div className="bg-[#0f172a] text-white w-20 h-20 rounded-full flex items-center justify-center mb-6">
-                <ThumbsUp size={36} strokeWidth={2} />
+            <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 md:p-10 flex flex-col items-center transition-transform hover:-translate-y-1">
+              <div className="bg-[#0f172a] text-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-4 md:mb-6 shrink-0">
+                <ThumbsUp className="w-8 h-8 md:w-9 md:h-9" strokeWidth={2} />
               </div>
-              <h3 className="text-2xl font-bold text-[#0F172A] mb-1">99%</h3>
-              <p className="text-sm font-semibold text-gray-700">Kepuasan Pelanggan</p>
+              <h3 className="text-xl md:text-2xl font-bold text-[#0F172A] mb-1">99%</h3>
+              <p className="text-xs md:text-sm font-semibold text-gray-500">Kepuasan Pelanggan</p>
             </div>
 
           </div>
@@ -241,29 +237,30 @@ export default function Beranda() {
       </section>
 
       {/* ================= BANNER IMAGE ================= */}
-      <section className="w-full mt-10">
+      <section className="w-full mt-6 md:mt-10">
         <img
           src={Banner}
           alt="Banner Nasyurul Khair"
-          className="w-full h-auto object-cover"
+          className="w-full h-auto max-h-112.5 object-cover"
         />
       </section>
 
       {/* ================= COME JOIN US (CTA) ================= */}
       <section
-        className="w-full py-32 px-6 flex flex-col items-center justify-center text-center bg-cover bg-center"
+        className="w-full py-16 md:py-24 px-4 md:px-6 flex flex-col items-center justify-center text-center bg-cover bg-center relative"
         style={{ backgroundImage: `url(${Bgcomejoinus})` }}
       >
-        <p className="text-gray-700 text-sm md:text-base mb-3 font-medium">
+        <p className="text-gray-600 text-xs md:text-base mb-2 font-medium max-w-md">
           Menyiarkan kebaikan di tengah masyarakat
         </p>
-        <h2 className="text-4xl md:text-5xl font-bold text-[#0F172A] mb-8">
+        <h2 className="text-3xl md:text-5xl font-bold text-[#0F172A] mb-6 md:mb-8">
           Come Join Us!
         </h2>
         <a 
           href={`https://wa.me/${formatWAUrl(noTelepon)}`}
           target="_blank"
           rel="noopener noreferrer"
+          className="inline-block"
         >
           <Button label="→ Gabung Sekarang" variant="secondary" />
         </a>

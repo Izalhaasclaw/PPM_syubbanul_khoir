@@ -13,83 +13,82 @@ export default function CardJadwal({
   tanggal,
   waktu,
 }: JadwalProps) {
+  
+  // Validasi dan konversi tanggal yang aman dari potensi kegagalan parse data API
+  const parseDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    return isNaN(d.getTime()) ? null : d;
+  };
+
+  const validDate = parseDate(tanggal);
+
   // Fungsi untuk mengambil nama Hari dari DateTime Prisma (Contoh: "Selasa")
-  const namaHari = new Date(tanggal).toLocaleDateString("id-ID", {
-    weekday: "long",
-  });
+  const namaHari = validDate
+    ? validDate.toLocaleDateString("id-ID", { weekday: "long" })
+    : "Hari -";
 
   // Fungsi untuk mengambil format Tanggal (Contoh: "9 Juni 2026")
-  const formatTanggal = new Date(tanggal).toLocaleDateString("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const formatTanggal = validDate
+    ? validDate.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "Tanggal tidak valid";
 
   return (
-    <div className="w-full bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-      {/* Bagian Atas (Biru Gelap) */}
-      <div className="bg-[#0f172a] text-white p-6">
-        <h3 className="text-2xl font-bold mb-1">{namaHari}</h3>
-        <p className="text-gray-300 font-medium">{formatTanggal}</p>
-      </div>
+    <div className="w-full bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-md transition-shadow duration-200 flex flex-col justify-between">
+      <div>
+        {/* Bagian Atas (Biru Gelap) */}
+        <div className="bg-[#0f172a] text-white p-6">
+          <h3 className="text-2xl font-bold mb-1 tracking-wide">{namaHari}</h3>
+          <p className="text-slate-300 font-medium text-sm">{formatTanggal}</p>
+        </div>
 
-      {/* Bagian Bawah (Putih) */}
-      <div className="p-6">
-        <h4 className="font-bold text-gray-900 text-lg mb-4 leading-snug">
-          {acara}
-        </h4>
+        {/* Bagian Bawah (Putih) */}
+        <div className="p-6">
+          <h4 className="font-bold text-gray-900 text-lg mb-4 leading-snug line-clamp-2" title={acara}>
+            {acara}
+          </h4>
 
-        <div className="space-y-2">
-          {/* Ikon Waktu */}
-          <div className="flex items-start gap-3 text-sm text-gray-600 font-medium">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 21 22"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5.21913 2.87494C4.62569 3.04152 4.08456 3.36882 3.65013 3.82394C3.2157 4.27906 2.90327 4.84596 2.74426 5.46766"
-                stroke="#222222"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-              <path
-                d="M15.7809 2.87494C16.3743 3.04152 16.9154 3.36882 17.3499 3.82394C17.7843 4.27906 18.0967 4.84596 18.2557 5.46766"
-                stroke="#222222"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-              <path
-                d="M10.5 3.66699C14.366 3.66699 17.5 6.94991 17.5 11C17.5 15.0501 14.366 18.333 10.5 18.333C6.63401 18.333 3.5 15.0501 3.5 11C3.5 6.94991 6.63401 3.66699 10.5 3.66699ZM10.5 6.33301C9.94782 6.33301 9.50018 6.78087 9.5 7.33301V10.75C9.50018 11.4402 10.0598 12 10.75 12H13.125C13.6772 12 14.1248 11.5521 14.125 11C14.1248 10.4479 13.6772 10 13.125 10H11.5V7.33301C11.4998 6.78087 11.0522 6.33301 10.5 6.33301Z"
-                fill="#222222"
-              />
-            </svg>
+          <div className="space-y-3">
+            {/* Ikon Waktu */}
+            <div className="flex items-center gap-3 text-sm text-gray-600 font-medium">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-slate-500 shrink-0"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span className="truncate">{waktu} WIB</span>
+            </div>
 
-            <span>{waktu}</span>
-          </div>
-
-          {/* Ikon Lokasi */}
-          <div className="flex items-start gap-3 text-sm text-gray-600 font-medium">
-            <svg
-              width="20"
-              height="17"
-              viewBox="0 0 17 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8.1001 0.599976C12.2422 0.599976 15.6001 4.14292 15.6001 8.51306C15.5999 14.1969 10.0891 17.6117 8.51514 18.4711C8.25271 18.6143 7.94748 18.6143 7.68506 18.4711C6.11112 17.6117 0.600256 14.1969 0.600098 8.51306C0.600098 4.14292 3.95796 0.599976 8.1001 0.599976ZM8.1001 5.12146C6.3249 5.12146 4.88623 6.64014 4.88623 8.51306C4.88636 10.3859 6.32498 11.9037 8.1001 11.9037C9.87522 11.9037 11.3138 10.3859 11.314 8.51306C11.314 6.64014 9.8753 5.12146 8.1001 5.12146Z"
-                fill="#0F172A"
-              />
-              <path
-                d="M8.1001 0.599976V-2.44379e-05V-2.44379e-05V0.599976ZM15.6001 8.51306L16.2001 8.51308V8.51306H15.6001ZM8.51514 18.4711L8.8026 18.9977L8.80267 18.9977L8.51514 18.4711ZM7.68506 18.4711L7.39752 18.9977L7.39759 18.9977L7.68506 18.4711ZM0.600098 8.51306H9.76324e-05V8.51308L0.600098 8.51306ZM8.1001 5.12146V4.52146V4.52146V5.12146ZM4.88623 8.51306H4.28623L4.28623 8.5131L4.88623 8.51306ZM8.1001 11.9037V12.5037V12.5037V11.9037ZM11.314 8.51306L11.914 8.5131V8.51306H11.314ZM8.1001 0.599976V1.19998C11.881 1.19998 15.0001 4.44357 15.0001 8.51306H15.6001H16.2001C16.2001 3.84227 12.6035 -2.43187e-05 8.1001 -2.44379e-05V0.599976ZM15.6001 8.51306L15.0001 8.51304C15 11.1486 13.7242 13.2834 12.211 14.8899C10.6972 16.4971 8.9866 17.53 8.2276 17.9445L8.51514 18.4711L8.80267 18.9977C9.61761 18.5527 11.4495 17.4486 13.0845 15.7126C14.7204 13.9759 16.2 11.5614 16.2001 8.51308L15.6001 8.51306ZM8.51514 18.4711L8.22767 17.9444C8.14441 17.9899 8.05578 17.9899 7.97252 17.9444L7.68506 18.4711L7.39759 18.9977C7.83919 19.2388 8.36101 19.2388 8.8026 18.9977L8.51514 18.4711ZM7.68506 18.4711L7.97259 17.9445C7.21359 17.53 5.50303 16.4971 3.98917 14.8899C2.47603 13.2834 1.20017 11.1486 1.2001 8.51304L0.600098 8.51306L9.76324e-05 8.51308C0.000182688 11.5614 1.47983 13.9759 3.11565 15.7126C4.75074 17.4486 6.58258 18.5527 7.39752 18.9977L7.68506 18.4711ZM0.600098 8.51306H1.2001C1.2001 4.44357 4.31924 1.19998 8.1001 1.19998V0.599976V-2.44379e-05C3.59668 -2.44379e-05 9.76324e-05 3.84227 9.76324e-05 8.51306H0.600098ZM8.1001 5.12146V4.52146C5.96345 4.52146 4.28623 6.33967 4.28623 8.51306H4.88623H5.48623C5.48623 6.94062 6.68634 5.72146 8.1001 5.72146V5.12146ZM4.88623 8.51306L4.28623 8.5131C4.28639 10.6865 5.96371 12.5037 8.1001 12.5037V11.9037V11.3037C6.68625 11.3037 5.48634 10.0852 5.48623 8.51302L4.88623 8.51306ZM8.1001 11.9037V12.5037C10.2365 12.5037 11.9138 10.6865 11.914 8.5131L11.314 8.51306L10.714 8.51302C10.7139 10.0852 9.51395 11.3037 8.1001 11.3037V11.9037ZM11.314 8.51306H11.914C11.914 6.33967 10.2367 4.52146 8.1001 4.52146V5.12146V5.72146C9.51385 5.72146 10.714 6.94062 10.714 8.51306H11.314Z"
-                fill="#222222"
-              />
-            </svg>
-
-            <span>{lokasi}</span>
+            {/* Ikon Lokasi (Kode SVG dibersihkan dari tumpukan path ganda) */}
+            <div className="flex items-start gap-3 text-sm text-gray-600 font-medium">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-slate-500 shrink-0 mt-0.5"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span className="leading-tight text-gray-700">{lokasi}</span>
+            </div>
           </div>
         </div>
       </div>
