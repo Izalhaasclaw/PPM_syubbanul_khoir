@@ -92,46 +92,47 @@ try {
 
 
 export const updateJadwalById = async (
-req: Request<{ id: string }>,
-res: Response
+  req: Request<{ id: string }>,
+  res: Response
 ) => {
-try {
-const id = Number(req.params.id);
+  try {
+    const id = Number(req.params.id);
 
     const existingJadwal = await prisma.jadwal.findUnique({
-        where: { id },
+      where: { id },
     });
 
     if (!existingJadwal) {
-        res.status(404).json({
-            message: "Jadwal tidak ditemukan",
-        });
-        return;
+      res.status(404).json({
+        message: "Jadwal tidak ditemukan",
+      });
+      return;
     }
 
-    const { acara, lokasi, tanggal, waktu, status } = req.body;
+    const { acara, lokasi, tanggal, waktu } = req.body;
 
     const updatedJadwal = await prisma.jadwal.update({
-        where: { id },
-        data: {
-            tanggal: tanggal ?? existingJadwal.tanggal,
-            waktu: waktu ?? existingJadwal.waktu,
-        },
+      where: { id },
+      data: {
+        // 👈 Masukkan kolom 'acara' dan 'lokasi' agar ikut terupdate
+        acara: acara ?? existingJadwal.acara,
+        lokasi: lokasi ?? existingJadwal.lokasi,
+        // 👈 Bungkus string tanggal ke dalam new Date() agar dikenali sebagai DateTime oleh Prisma
+        tanggal: tanggal ? new Date(tanggal) : existingJadwal.tanggal,
+        waktu: waktu ?? existingJadwal.waktu,
+      },
     });
 
     res.status(200).json({
-        message: "Jadwal berhasil diupdate",
-        data: updatedJadwal,
+      message: "Jadwal berhasil diupdate",
+      data: updatedJadwal,
     });
-
-} catch (error) {
+  } catch (error) {
     res.status(500).json({
-        message: "Gagal update jadwal",
-        error,
+      message: "Gagal update jadwal",
+      error,
     });
-}
-
-
+  }
 };
 
 

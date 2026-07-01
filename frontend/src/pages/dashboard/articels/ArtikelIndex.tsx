@@ -19,7 +19,7 @@ interface Artikel {
   createdAt: string; 
 }
 
-const ITEMS_PER_PAGE = 7;
+const ITEMS_PER_PAGE = 5;
 
 export default function ArtikelIndex() {
   const [artikelList, setArtikelList] = useState<Artikel[]>([]);

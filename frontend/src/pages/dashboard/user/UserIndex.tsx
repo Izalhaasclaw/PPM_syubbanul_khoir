@@ -20,7 +20,7 @@ interface User {
   foto: string; 
 }
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 5;
 
 export default function UserIndex() {
   const [users, setUsers] = useState<User[]>([]);

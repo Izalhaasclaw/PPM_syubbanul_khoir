@@ -58,7 +58,15 @@ export default function EditJadwal() {
     try {
       setLoading(true);
 
-      await API.put(`/jadwal-index/${id}`, data);
+      // 📄 Transformasi data sebelum dikirim ke API
+      const payload = {
+        ...data,
+        // Mengubah string "YYYY-MM-DD" menjadi format ISO DateTime utuh yang diterima Prisma
+        tanggal: data.tanggal ? new Date(data.tanggal).toISOString() : null,
+      };
+
+      // Kirim data yang sudah di-format (payload) ke backend
+      await API.put(`/jadwal-index/${id}`, payload);
 
       alert("Jadwal berhasil diperbarui!");
       navigate("/jadwal-index");

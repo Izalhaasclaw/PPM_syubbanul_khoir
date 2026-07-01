@@ -5,7 +5,7 @@ import {
   Users, 
   FileText, 
   Calendar, 
-  Info, 
+  Info as InfoIcon, // Di-rename agar tidak bentrok dengan penamaan tipe/variabel data info
   ArrowRight, 
   Plus, 
   LayoutDashboard, 
@@ -19,6 +19,7 @@ export default function DashboardIndex() {
     jadwal: 0, 
     informasi: 0 
   });
+  const [infoId, setInfoId] = useState<number | null>(null); // 👈 State untuk menyimpan ID Informasi dari database
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -55,11 +56,17 @@ export default function DashboardIndex() {
           totalJadwal = Array.isArray(jData) ? jData.length : jData ? 1 : 0;
         }
 
-        // --- 4. Hitung Total Informasi ---
+        // --- 4. Hitung Total & Ambil ID Informasi ---
         let totalInfo = 0;
         if (resInfo?.data) {
           const iData = resInfo.data.data || resInfo.data.Info || resInfo.data;
           totalInfo = Array.isArray(iData) ? iData.length : iData ? 1 : 0;
+
+          // Ambil item pertama dari data informasi untuk mendapatkan ID-nya 👈
+          const firstInfo = Array.isArray(iData) ? iData[0] : iData;
+          if (firstInfo && firstInfo.id) {
+            setInfoId(firstInfo.id); // Simpan ID ke dalam state 👈
+          }
         }
 
         // Simpan nilai riil dari database ke dalam State
@@ -126,7 +133,7 @@ export default function DashboardIndex() {
             ) : (
               <h3 className="text-3xl font-bold text-gray-900">{stats.artikel}</h3>
             )}
-            <Link to="/artikel" className="text-xs font-semibold text-[#35A2FD] hover:text-[#1D8DF5] inline-flex items-center gap-1 group">
+            <Link to="/artikel-index" className="text-xs font-semibold text-[#35A2FD] hover:text-[#1D8DF5] inline-flex items-center gap-1 group">
               <span>Lihat Artikel</span>
               <ArrowRight size={12} className="transform transition-transform group-hover:translate-x-1" />
             </Link>
@@ -145,7 +152,7 @@ export default function DashboardIndex() {
             ) : (
               <h3 className="text-3xl font-bold text-gray-900">{stats.jadwal}</h3>
             )}
-            <Link to="/jadwal" className="text-xs font-semibold text-[#35A2FD] hover:text-[#1D8DF5] inline-flex items-center gap-1 group">
+            <Link to="/jadwal-index" className="text-xs font-semibold text-[#35A2FD] hover:text-[#1D8DF5] inline-flex items-center gap-1 group">
               <span>Atur Jadwal</span>
               <ArrowRight size={12} className="transform transition-transform group-hover:translate-x-1" />
             </Link>
@@ -170,7 +177,7 @@ export default function DashboardIndex() {
             </Link>
           </div>
           <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 shrink-0 ml-2">
-            <Info size={24} />
+            <InfoIcon size={24} />
           </div>
         </div>
 
@@ -183,7 +190,7 @@ export default function DashboardIndex() {
           
           {/* Tambah User */}
           <Link
-            to="/user/create"
+            to="/user/create-user"
             className="flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-200 hover:border-indigo-500 hover:bg-indigo-50/30 transition-all group"
           >
             <div className="flex items-center gap-3 min-w-0">
@@ -200,7 +207,7 @@ export default function DashboardIndex() {
 
           {/* Buat Artikel */}
           <Link
-            to="/artikel/create"
+            to="/artikel-index/create-artikel"
             className="flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-200 hover:border-[#35A2FD] hover:bg-blue-50/30 transition-all group"
           >
             <div className="flex items-center gap-3 min-w-0">
@@ -217,7 +224,7 @@ export default function DashboardIndex() {
 
           {/* Tambah Jadwal */}
           <Link
-            to="/jadwal/create"
+            to="/jadwal-index/create-jadwal"
             className="flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-200 hover:border-emerald-500 hover:bg-emerald-50/30 transition-all group"
           >
             <div className="flex items-center gap-3 min-w-0">
@@ -232,10 +239,12 @@ export default function DashboardIndex() {
             <ArrowRight size={16} className="text-gray-300 group-hover:text-emerald-500 shrink-0 ml-1 transition-colors" />
           </Link>
 
-          {/* Edit Informasi */}
+          {/* Edit Informasi 👈 Sekarang tombol ini menggunakan dynamic ID atau mengarah ke list info jika ID belum termuat */}
           <Link
-            to="/info"
-            className="flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-200 hover:border-amber-500 hover:bg-amber-50/30 transition-all group"
+            to={infoId ? `/info/edit-info/${infoId}` : "/info"}
+            className={`flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-200 hover:border-amber-500 hover:bg-amber-50/30 transition-all group ${
+              loading ? "pointer-events-none opacity-50" : ""
+            }`}
           >
             <div className="flex items-center gap-3 min-w-0">
               <div className="p-2 bg-amber-50 text-amber-500 rounded-lg shrink-0">
