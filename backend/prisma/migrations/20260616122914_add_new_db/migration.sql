@@ -27,7 +27,7 @@ ALTER TABLE `users` DROP COLUMN `jabatan`,
 -- CreateTable
 CREATE TABLE `informasi` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `telpon` VARCHAR(191) NOT NULL,
+    `telepon` VARCHAR(191) NOT NULL,
     `alamat` VARCHAR(191) NOT NULL,
     `instagram` VARCHAR(191) NOT NULL,
     `tiktok` VARCHAR(191) NOT NULL,

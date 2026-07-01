@@ -1,10 +1,24 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API } from "../../lib/axios"; 
-import { Users, FileText, ArrowRight, Plus, LayoutDashboard, Loader2 } from "lucide-react";
+import { 
+  Users, 
+  FileText, 
+  Calendar, 
+  Info, 
+  ArrowRight, 
+  Plus, 
+  LayoutDashboard, 
+  Loader2 
+} from "lucide-react";
 
 export default function DashboardIndex() {
-  const [stats, setStats] = useState({ artikel: 0, users: 0 });
+  const [stats, setStats] = useState({ 
+    users: 0, 
+    artikel: 0, 
+    jadwal: 0, 
+    informasi: 0 
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -12,21 +26,52 @@ export default function DashboardIndex() {
       try {
         setLoading(true);
         
-        const [resArtikel, resUser] = await Promise.all([
-          API.get("/artikel-index").catch(() => ({ data: { data: [] } })),
-          API.get("/user").catch(() => ({ data: { data: [] } })), 
+        // Mengambil seluruh data statistik secara paralel dari database
+        const [resUser, resArtikel, resJadwal, resInfo] = await Promise.all([
+          API.get("/users").catch(() => ({ data: null })), 
+          API.get("/artikel-index").catch(() => ({ data: null })),
+          API.get("/jadwal-index").catch(() => ({ data: null })),
+          API.get("/informasi").catch(() => ({ data: null })),
         ]);
 
-        
-        const totalArtikel = resArtikel.data?.data?.length || 0;
-        const totalUser = resUser.data?.data?.length || 0;
+        // --- 1. Hitung Total User ---
+        let totalUser = 0;
+        if (resUser?.data) {
+          const uData = resUser.data.data || resUser.data.users || resUser.data;
+          totalUser = Array.isArray(uData) ? uData.length : uData ? 1 : 0;
+        }
 
+        // --- 2. Hitung Total Artikel ---
+        let totalArtikel = 0;
+        if (resArtikel?.data) {
+          const aData = resArtikel.data.data || resArtikel.data.artikel || resArtikel.data;
+          totalArtikel = Array.isArray(aData) ? aData.length : aData ? 1 : 0;
+        }
+
+        // --- 3. Hitung Total Jadwal ---
+        let totalJadwal = 0;
+        if (resJadwal?.data) {
+          const jData = resJadwal.data.data || resJadwal.data.jadwal || resJadwal.data;
+          totalJadwal = Array.isArray(jData) ? jData.length : jData ? 1 : 0;
+        }
+
+        // --- 4. Hitung Total Informasi ---
+        let totalInfo = 0;
+        if (resInfo?.data) {
+          const iData = resInfo.data.data || resInfo.data.Info || resInfo.data;
+          totalInfo = Array.isArray(iData) ? iData.length : iData ? 1 : 0;
+        }
+
+        // Simpan nilai riil dari database ke dalam State
         setStats({
-          artikel: totalArtikel,
           users: totalUser,
+          artikel: totalArtikel,
+          jadwal: totalJadwal,
+          informasi: totalInfo,
         });
+
       } catch (error) {
-        console.error("Gagal memuat data dashboard:", error);
+        console.error("Gagal memuat data dari database:", error);
       } finally {
         setLoading(false);
       }
@@ -36,97 +81,174 @@ export default function DashboardIndex() {
   }, []);
 
   return (
-    <div className="p-4 space-y-8">
-      {}
+    <div className="p-2 md:p-4 space-y-8">
+      {/* Welcome Banner */}
       <div className="bg-linear-to-r from-[#35A2FD] to-[#1D8DF5] rounded-2xl p-6 text-white shadow-md relative overflow-hidden">
         <div className="relative z-10 space-y-2">
-          <h1 className="text-3xl font-extrabold flex items-center gap-2">
+          <h1 className="text-2xl md:text-3xl font-extrabold flex items-center gap-2">
             <LayoutDashboard size={28} /> Selamat Datang di Dashboard!
           </h1>
           <p className="text-blue-50 opacity-90 max-w-xl text-sm md:text-base">
-            Kelola konten artikel, manajemeni hak akses user, dan pantau perkembangan platform Anda dengan mudah dari satu panel terpusat.
+            Kelola konten artikel, manajemeni hak akses user, pantau jadwal mading, dan konfigurasi informasi platform Anda dari satu panel terpusat.
           </p>
         </div>
-        {}
         <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
       </div>
 
-      {}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {}
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Artikel</p>
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        
+        {/* Total Pengguna */}
+        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
+          <div className="space-y-2 min-w-0 flex-1">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Total Pengguna</p>
             {loading ? (
               <Loader2 className="animate-spin text-gray-400" size={24} />
             ) : (
-              <h3 className="text-4xl font-bold text-gray-900">{stats.artikel}</h3>
+              <h3 className="text-3xl font-bold text-gray-900">{stats.users}</h3>
             )}
-            <Link to="/artikel" className="text-sm font-semibold text-[#35A2FD] hover:text-[#1D8DF5] inline-flex items-center gap-1 group">
-              Lihat Semua Artikel 
-              <ArrowRight size={14} className="transform transition-transform group-hover:translate-x-1" />
+            <Link to="/user" className="text-xs font-semibold text-[#35A2FD] hover:text-[#1D8DF5] inline-flex items-center gap-1 group">
+              <span>Manajemen User</span>
+              <ArrowRight size={12} className="transform transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
-          <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-[#35A2FD]">
-            <FileText size={28} />
+          <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-500 shrink-0 ml-2">
+            <Users size={24} />
           </div>
         </div>
 
-        {}
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Pengguna</p>
+        {/* Total Artikel */}
+        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
+          <div className="space-y-2 min-w-0 flex-1">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Total Artikel</p>
             {loading ? (
               <Loader2 className="animate-spin text-gray-400" size={24} />
             ) : (
-              <h3 className="text-4xl font-bold text-gray-900">{stats.users}</h3>
+              <h3 className="text-3xl font-bold text-gray-900">{stats.artikel}</h3>
             )}
-            <Link to="/user" className="text-sm font-semibold text-[#35A2FD] hover:text-[#1D8DF5] inline-flex items-center gap-1 group">
-              Lihat Manajemen User 
-              <ArrowRight size={14} className="transform transition-transform group-hover:translate-x-1" />
+            <Link to="/artikel" className="text-xs font-semibold text-[#35A2FD] hover:text-[#1D8DF5] inline-flex items-center gap-1 group">
+              <span>Lihat Artikel</span>
+              <ArrowRight size={12} className="transform transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
-          <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-500">
-            <Users size={28} />
+          <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-[#35A2FD] shrink-0 ml-2">
+            <FileText size={24} />
           </div>
         </div>
+
+        {/* Total Jadwal */}
+        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
+          <div className="space-y-2 min-w-0 flex-1">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Total Jadwal</p>
+            {loading ? (
+              <Loader2 className="animate-spin text-gray-400" size={24} />
+            ) : (
+              <h3 className="text-3xl font-bold text-gray-900">{stats.jadwal}</h3>
+            )}
+            <Link to="/jadwal" className="text-xs font-semibold text-[#35A2FD] hover:text-[#1D8DF5] inline-flex items-center gap-1 group">
+              <span>Atur Jadwal</span>
+              <ArrowRight size={12} className="transform transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+          <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-500 shrink-0 ml-2">
+            <Calendar size={24} />
+          </div>
+        </div>
+
+        {/* Total Informasi */}
+        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center justify-between transition-all hover:shadow-md">
+          <div className="space-y-2 min-w-0 flex-1">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider truncate">Data Informasi</p>
+            {loading ? (
+              <Loader2 className="animate-spin text-gray-400" size={24} />
+            ) : (
+              <h3 className="text-3xl font-bold text-gray-900">{stats.informasi}</h3>
+            )}
+            <Link to="/info" className="text-xs font-semibold text-[#35A2FD] hover:text-[#1D8DF5] inline-flex items-center gap-1 group">
+              <span>Cek Info Kontak</span>
+              <ArrowRight size={12} className="transform transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+          <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 shrink-0 ml-2">
+            <Info size={24} />
+          </div>
+        </div>
+
       </div>
 
-      {}
+      {/* Quick Actions Container */}
       <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-4">
         <h2 className="text-xl font-bold text-gray-900">Aksi Cepat</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Link
-            to="/artikel/create"
-            className="flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-200 hover:border-[#35A2FD] hover:bg-blue-50/30 transition-all group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-50 text-[#35A2FD] rounded-lg">
-                <Plus size={20} />
-              </div>
-              <div className="text-left">
-                <p className="font-semibold text-gray-800 text-sm">Buat Artikel Baru</p>
-                <p className="text-xs text-gray-400">Rilis berita atau edukasi baru</p>
-              </div>
-            </div>
-            <ArrowRight size={16} className="text-gray-300 group-hover:text-[#35A2FD] transition-colors" />
-          </Link>
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          {/* Tambah User */}
           <Link
             to="/user/create"
             className="flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-200 hover:border-indigo-500 hover:bg-indigo-50/30 transition-all group"
           >
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-indigo-50 text-indigo-500 rounded-lg">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="p-2 bg-indigo-50 text-indigo-500 rounded-lg shrink-0">
                 <Plus size={20} />
               </div>
-              <div className="text-left">
-                <p className="font-semibold text-gray-800 text-sm">Tambah User Baru</p>
-                <p className="text-xs text-gray-400">Daftarkan admin atau penulis baru</p>
+              <div className="text-left min-w-0">
+                <p className="font-semibold text-gray-800 text-sm truncate">Tambah User</p>
+                <p className="text-xs text-gray-400 truncate">Daftarkan pengelola baru</p>
               </div>
             </div>
-            <ArrowRight size={16} className="text-gray-300 group-hover:text-indigo-500 transition-colors" />
+            <ArrowRight size={16} className="text-gray-300 group-hover:text-indigo-500 shrink-0 ml-1 transition-colors" />
           </Link>
+
+          {/* Buat Artikel */}
+          <Link
+            to="/artikel/create"
+            className="flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-200 hover:border-[#35A2FD] hover:bg-blue-50/30 transition-all group"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="p-2 bg-blue-50 text-[#35A2FD] rounded-lg shrink-0">
+                <Plus size={20} />
+              </div>
+              <div className="text-left min-w-0">
+                <p className="font-semibold text-gray-800 text-sm truncate">Buat Artikel</p>
+                <p className="text-xs text-gray-400 truncate">Rilis edukasi mading baru</p>
+              </div>
+            </div>
+            <ArrowRight size={16} className="text-gray-300 group-hover:text-[#35A2FD] shrink-0 ml-1 transition-colors" />
+          </Link>
+
+          {/* Tambah Jadwal */}
+          <Link
+            to="/jadwal/create"
+            className="flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-200 hover:border-emerald-500 hover:bg-emerald-50/30 transition-all group"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="p-2 bg-emerald-50 text-emerald-500 rounded-lg shrink-0">
+                <Plus size={20} />
+              </div>
+              <div className="text-left min-w-0">
+                <p className="font-semibold text-gray-800 text-sm truncate">Tambah Jadwal</p>
+                <p className="text-xs text-gray-400 truncate">Susun agenda aktivitas mading</p>
+              </div>
+            </div>
+            <ArrowRight size={16} className="text-gray-300 group-hover:text-emerald-500 shrink-0 ml-1 transition-colors" />
+          </Link>
+
+          {/* Edit Informasi */}
+          <Link
+            to="/info"
+            className="flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-200 hover:border-amber-500 hover:bg-amber-50/30 transition-all group"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="p-2 bg-amber-50 text-amber-500 rounded-lg shrink-0">
+                <Plus size={20} />
+              </div>
+              <div className="text-left min-w-0">
+                <p className="font-semibold text-gray-800 text-sm truncate">Ubah Info</p>
+                <p className="text-xs text-gray-400 truncate">Kelola kontak & medsos</p>
+              </div>
+            </div>
+            <ArrowRight size={16} className="text-gray-300 group-hover:text-amber-500 shrink-0 ml-1 transition-colors" />
+          </Link>
+
         </div>
       </div>
     </div>
