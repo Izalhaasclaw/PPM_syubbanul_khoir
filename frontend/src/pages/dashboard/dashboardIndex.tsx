@@ -90,7 +90,7 @@ export default function DashboardIndex() {
   return (
     <div className="p-2 md:p-4 space-y-8">
       {/* Welcome Banner */}
-      <div className="bg-linear-to-r from-[#35A2FD] to-[#1D8DF5] rounded-2xl p-6 text-white shadow-md relative overflow-hidden">
+      <div className="bg-[#0F172A] rounded-2xl p-6 text-white shadow-md relative overflow-hidden">
         <div className="relative z-10 space-y-2">
           <h1 className="text-2xl md:text-3xl font-extrabold flex items-center gap-2">
             <LayoutDashboard size={28} /> Selamat Datang di Dashboard!

@@ -10,7 +10,7 @@ export default function MainLayout() {
         <Header />
       </div>
 
-      <main className="grow w-full max-w-7xl mx-auto pt-17 pb-8 px-3 sm:px-4 md:px-6 flex flex-col">
+      <main className="grow w-full flex flex-col">
         <Outlet />
       </main>
 
