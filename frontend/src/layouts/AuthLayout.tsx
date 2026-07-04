@@ -1,15 +1,14 @@
 import { Outlet } from "react-router-dom";
+import BgImage from "../assets/bgdashboard.png";
 
 export default function AuthLayout() {
-  const bgImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWipLyc4xy0_uUx0rjBydHjGVwVJo7QElbiagr0sA-e7ZZoRFx6jzeBQ0i&s=10";
-
   return (
     <div className="min-h-screen w-full">
-      
       {/* TAMPILAN MOBILE & TABLET */}
-      <div 
+      <div
         className="lg:hidden min-h-screen bg-cover bg-center flex items-center justify-center p-4 relative"
-        style={{ backgroundImage: `url(${bgImage})` }}
+        // SESUDAHNYA
+        style={{ backgroundImage: `url(${BgImage})` }}
       >
         {/* Overlay gelap tipis */}
         <div className="absolute inset-0 bg-black/50 z-0" />
@@ -20,14 +19,12 @@ export default function AuthLayout() {
         </div>
       </div>
 
-
       {/* TAMPILAN DESKTOP / PC (>= lg) */}
       <div className="hidden lg:grid grid-cols-2 min-h-screen bg-white">
-        
         {/* Kolom Kiri: Gambar Full Screen */}
         <div className="bg-gray-50 h-screen flex flex-col items-center justify-center overflow-hidden">
           <img
-            src={bgImage}
+            src={BgImage}
             alt="Syubbanul Khoir Banner"
             className="w-full h-full object-cover"
           />
@@ -39,9 +36,7 @@ export default function AuthLayout() {
             <Outlet />
           </div>
         </div>
-
       </div>
-
     </div>
   );
 }

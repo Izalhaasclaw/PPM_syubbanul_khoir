@@ -149,7 +149,7 @@ export default function Beranda() {
             {daftarArtikel.map((artikel) => (
               <div
                 key={artikel.id}
-                className="w-70 sm:w-90 md:w-105 aspect-4/3 shrink-0 snap-center rounded-2xl overflow-hidden shadow-md"
+                className="w-70 sm:w-90 md:w-105 shrink-0 snap-center rounded-2xl overflow-hidden shadow-md"
               >
                 <CardArtikel
                   title={artikel.judul}

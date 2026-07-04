@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Edit, Loader2 } from "lucide-react";
 import { API } from "../../../lib/axios"; 
 
-interface Info {
+interface Informasi {
   id: number;
   telepon: string;
   email: string;
@@ -14,7 +14,7 @@ interface Info {
 }
 
 export default function InfoIndex() {
-  const [infoData, setInfoData] = useState<Info[]>([]);
+  const [infoData, setInfoData] = useState<Informasi[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchInfo = async () => {

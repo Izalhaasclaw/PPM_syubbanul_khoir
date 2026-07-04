@@ -1,99 +1,88 @@
 import { Request, Response } from "express";
-import { prisma } from "../lib/db.js";
-
+import prisma from "../lib/db.js";
 
 export const getJadwal = async (req: Request, res: Response) => {
-try {
-const allJadwal = await prisma.jadwal.findMany({
-orderBy: {
-tanggal: "asc",
-},
-});
+  try {
+    const allJadwal = await prisma.jadwal.findMany({
+      orderBy: {
+        tanggal: "asc",
+      },
+    });
 
     res.status(200).json({
-        message: "Data jadwal berhasil ditampilkan",
-        data: allJadwal,
+      message: "Data jadwal berhasil ditampilkan",
+      data: allJadwal,
     });
-
-} catch (error) {
+  } catch (error) {
     res.status(500).json({
-        message: "Gagal menampilkan data jadwal",
-        error,
+      message: "Gagal menampilkan data jadwal",
+      error,
     });
-}
-
+  }
 };
 
-
 export const saveJadwal = async (req: Request, res: Response) => {
-try {
-    const { acara, lokasi, tanggal, waktu, } = req.body;
+  try {
+    const { acara, lokasi, tanggal, waktu } = req.body;
 
     if (!acara || !lokasi || !tanggal || !waktu) {
-        res.status(400).json({
-            message: "Data jadwal belum lengkap",
-        });
-        return;
+      res.status(400).json({
+        message: "Data jadwal belum lengkap",
+      });
+      return;
     }
 
     const newJadwal = await prisma.jadwal.create({
-        data: {
-            acara,
-            lokasi,
-            tanggal: new Date(tanggal),
-            waktu,
-        },
+      data: {
+        acara,
+        lokasi,
+        tanggal: new Date(tanggal),
+        waktu,
+      },
     });
 
     res.status(201).json({
-        message: "Jadwal berhasil dibuat",
-        data: newJadwal,
+      message: "Jadwal berhasil dibuat",
+      data: newJadwal,
     });
-
-} catch (error) {
+  } catch (error) {
     res.status(500).json({
-        message: "Gagal membuat jadwal",
-        error,
+      message: "Gagal membuat jadwal",
+      error,
     });
-}
-
+  }
 };
 
-
 export const showJadwalById = async (
-    req: Request<{ id: string }>,
-    res: Response
-        ) => {
-try {
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
     const id = Number(req.params.id);
 
     const jadwal = await prisma.jadwal.findUnique({
-        where: { id },
+      where: { id },
     });
 
     if (!jadwal) {
-        res.status(404).json({
-            message: "Jadwal tidak ditemukan",
-        });
-        return;
+      res.status(404).json({
+        message: "Jadwal tidak ditemukan",
+      });
+      return;
     }
 
     res.status(200).json(jadwal);
-
-} catch (error) {
+  } catch (error) {
     res.status(500).json({
-        message: "Gagal mengambil data jadwal",
-        error,
+      message: "Gagal mengambil data jadwal",
+      error,
     });
-}
-
-
+  }
 };
-
 
 export const updateJadwalById = async (
   req: Request<{ id: string }>,
-  res: Response
+  res: Response,
 ) => {
   try {
     const id = Number(req.params.id);
@@ -135,39 +124,35 @@ export const updateJadwalById = async (
   }
 };
 
-
 export const deleteJadwalById = async (
-req: Request<{ id: string }>,
-res: Response
+  req: Request<{ id: string }>,
+  res: Response,
 ) => {
-try {
-const id = Number(req.params.id);
+  try {
+    const id = Number(req.params.id);
 
     const existingJadwal = await prisma.jadwal.findUnique({
-        where: { id },
+      where: { id },
     });
 
     if (!existingJadwal) {
-        res.status(404).json({
-            message: "Jadwal tidak ditemukan",
-        });
-        return;
+      res.status(404).json({
+        message: "Jadwal tidak ditemukan",
+      });
+      return;
     }
 
     await prisma.jadwal.delete({
-        where: { id },
+      where: { id },
     });
 
     res.status(200).json({
-        message: `Jadwal ID ${id} berhasil dihapus`,
+      message: `Jadwal ID ${id} berhasil dihapus`,
     });
-
-} catch (error) {
+  } catch (error) {
     res.status(500).json({
-        message: "Gagal menghapus jadwal",
-        error,
+      message: "Gagal menghapus jadwal",
+      error,
     });
-}
-
-
+  }
 };

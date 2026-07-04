@@ -59,3 +59,5 @@ export default function CardArtikel({ title, imageUrl, link, category }: CardArt
     </Link>
   );
 }
+
+

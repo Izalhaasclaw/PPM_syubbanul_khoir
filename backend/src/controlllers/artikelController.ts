@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { prisma } from "../lib/db.js";
-import { put, del } from "@vercel/blob"; 
-
+import prisma from "../lib/db.js";
+import { put, del } from "@vercel/blob";
 
 export const getArtikel = async (req: Request, res: Response) => {
   try {
@@ -23,12 +22,10 @@ export const getArtikel = async (req: Request, res: Response) => {
   }
 };
 
-
 export const saveArtikel = async (req: Request, res: Response) => {
   try {
-    const { judul, isi } = req.body; 
+    const { judul, isi } = req.body;
 
-    
     if (!req.file) {
       res.status(400).json({ message: "Foto artikel wajib diunggah" });
       return;
@@ -39,17 +36,15 @@ export const saveArtikel = async (req: Request, res: Response) => {
       return;
     }
 
-    
     const blob = await put(req.file.originalname, req.file.buffer, {
       access: "public",
     });
 
-    
     const newArtikel = await prisma.artikel.create({
       data: {
         judul,
         isi,
-        foto: blob.url, 
+        foto: blob.url,
       },
     });
 
@@ -65,10 +60,9 @@ export const saveArtikel = async (req: Request, res: Response) => {
   }
 };
 
-
 export const showArtikelById = async (
   req: Request<{ id: string }>,
-  res: Response
+  res: Response,
 ) => {
   try {
     const id = Number(req.params.id);
@@ -93,10 +87,9 @@ export const showArtikelById = async (
   }
 };
 
-
 export const updateArtikelById = async (
   req: Request<{ id: string }>,
-  res: Response
+  res: Response,
 ) => {
   try {
     const id = Number(req.params.id);
@@ -113,11 +106,9 @@ export const updateArtikelById = async (
     }
 
     const { judul, isi } = req.body;
-    let fotoUrl = existingArtikel.foto; 
+    let fotoUrl = existingArtikel.foto;
 
-    
     if (req.file) {
-      
       if (existingArtikel.foto) {
         try {
           await del(existingArtikel.foto);
@@ -126,7 +117,6 @@ export const updateArtikelById = async (
         }
       }
 
-      
       const blob = await put(req.file.originalname, req.file.buffer, {
         access: "public",
       });
@@ -138,7 +128,7 @@ export const updateArtikelById = async (
       data: {
         judul: judul ?? existingArtikel.judul,
         isi: isi ?? existingArtikel.isi,
-        foto: fotoUrl, 
+        foto: fotoUrl,
         updatedAt: new Date(),
       },
     });
@@ -155,10 +145,9 @@ export const updateArtikelById = async (
   }
 };
 
-
 export const deleteArtikelById = async (
   req: Request<{ id: string }>,
-  res: Response
+  res: Response,
 ) => {
   try {
     const id = Number(req.params.id);
@@ -174,12 +163,14 @@ export const deleteArtikelById = async (
       return;
     }
 
-    
     if (existingArtikel.foto) {
       try {
         await del(existingArtikel.foto);
       } catch (err) {
-        console.error("Gagal menghapus file dari Vercel Blob saat hapus artikel:", err);
+        console.error(
+          "Gagal menghapus file dari Vercel Blob saat hapus artikel:",
+          err,
+        );
       }
     }
 

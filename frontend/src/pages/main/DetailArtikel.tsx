@@ -117,7 +117,7 @@ export default function DetailArtikel() {
 
   return (
     // Menyesuaikan padding atas (pt-6 pb-16) agar pas dengan header di layar mobile
-    <div className="w-full min-h-screen bg-white pt-6 pb-16 px-4 md:px-6">
+    <div className="w-full min-h-screen bg-white py-25 px-4 md:px-6">
       <article className="max-w-4xl mx-auto">
         {/* --- Judul Artikel --- */}
         <h1 className="text-xl sm:text-2xl md:text-[40px] font-bold text-gray-900 mb-4 md:mb-6 leading-snug md:leading-[1.3]">
