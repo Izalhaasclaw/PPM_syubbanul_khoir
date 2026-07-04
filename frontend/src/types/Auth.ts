@@ -16,6 +16,6 @@ export type LoginRequest = {
 export type UserLogin = {
     name: string;
     username: string;
-    id: string;
+    id?: string;
     foto?: string | null;
 }
