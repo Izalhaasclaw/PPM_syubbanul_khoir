@@ -2,7 +2,8 @@ import axios, { AxiosError } from "axios";
 import { authStore } from "../store/AuthStore";
 
 export const API = axios.create({
-  baseURL: import.meta.env.API_URL || "http://localhost:3000",
+  // Ubah menjadi VITE_API_URL
+  baseURL: import.meta.env.VITE_API_URL || "https://syubbanul-khoir.vercel.app",
   headers: {
     "Content-Type": "application/json",
   },
@@ -23,9 +24,7 @@ API.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      
       authStore.getState().logout();
-
       window.dispatchEvent(new Event("auth:unauthorized"));
     }
     return Promise.reject(error);
