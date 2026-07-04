@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import CardJadwal, { type JadwalProps } from "../../components/CardJadwal";
-import latar from "../../assets/1.png"; // Sesuaikan path gambarnya
+import latar from "../../assets/bg2.png"; // Sesuaikan path gambarnya
 import { API } from "../../lib/axios";
 
 export default function Jadwal() {

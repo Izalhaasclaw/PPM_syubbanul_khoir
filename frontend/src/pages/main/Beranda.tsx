@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import Banner from "../../assets/Group 61.png";
-import Bgcomejoinus from "../../assets/Group 60.png";
-import BgAngka from "../../assets/group 63.png";
+import Banner from "../../assets/asset_2.png";
+import Bgcomejoinus from "../../assets/asset_3.png";
+import BgAngka from "../../assets/asset_1.png";
 import BgImage from "../../assets/bgdashboard.png";
 import Button from "../../components/ui/Button";
 import CardArtikel from "../../components/cardArtikel";

@@ -1,5 +1,5 @@
 import GoogleMaps from "../../components/GoogleMaps"; 
-import latar from "../../assets/1.png"; 
+import latar from "../../assets/bg2.png"; 
 import LogoSyubbanul from "../../assets/logo_syubbanul.png"; 
 
 export default function Tentang() {
